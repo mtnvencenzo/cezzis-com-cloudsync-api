@@ -1,0 +1,30 @@
+apiVersion: dapr.io/v1alpha1
+kind: Component
+metadata:
+  name: bindings-idp-account-email-sync-queue
+  namespace: cezzis
+  labels:
+    app.kubernetes.io/part-of: cezzis
+    app.kubernetes.io/managed-by: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "200"
+spec:
+  type: bindings.rabbitmq
+  version: v1
+  metadata:
+    - name: queueName
+      value: "idp-account-email-sync-queue"
+    - name: host
+      secretKeyRef:
+        name: cezzis-com-cloudsync-api-shared-secrets
+        key: RABBITMQ_CONNECTION_STRING
+    - name: durable
+      value: "true"
+    - name: deletedWhenUnused
+      value: "false"
+    - name: direction
+      value: "input"
+scopes:
+  - cloudsync-api-dapr
+auth:
+  secretStore: kubernetes

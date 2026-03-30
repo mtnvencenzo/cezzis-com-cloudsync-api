@@ -1,0 +1,23 @@
+apiVersion: dapr.io/v1alpha1
+kind: Configuration
+
+metadata:
+  name: dapr-config
+
+spec:
+  tracing:
+    samplingRate: "1"
+    otel:
+      endpointAddress: "localhost:4317"
+      isSecure: false
+      protocol: grpc
+  logging:
+    apiLogging:
+      enabled: true
+      obfuscateURLs: false
+  metrics:
+    enabled: true
+    rules: []
+    http:
+      increasedCardinality: true
+    latencyDistributionBuckets: [1, 2, 5, 10, 25, 50, 100, 250, 500, 1000, 2500, 5000, 10000]

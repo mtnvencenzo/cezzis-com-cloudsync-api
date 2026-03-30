@@ -1,0 +1,26 @@
+apiVersion: dapr.io/v1alpha1
+kind: Component
+
+metadata:
+  name: pubsub-account-updates-topic
+
+spec:
+  type: pubsub.rabbitmq
+  version: v1
+  metadata:
+    - name: exchangeName
+      value: "account-updates-topic"
+    - name: exchangeKind
+      value: "topic"
+    - name: connectionString
+      secretKeyRef:
+        name: rabbitmq_connectionstring
+    - name: durable
+      value: "true"
+    - name: deletedWhenUnused
+      value: "false"
+scopes:
+  - cloudsync-api-dapr
+
+auth:
+  secretStore: secret-store

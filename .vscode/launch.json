@@ -1,0 +1,55 @@
+    {
+        "version": "0.2.0",
+        "configurations": [
+            {
+                "name": "k8s Debug: Accounts API",
+                "type": "debugpy",
+                "request": "launch",
+                "preLaunchTask": "dapr-run-k8s",
+                "module": "uvicorn",
+                "args": [
+                    "main:app",
+                    "--reload",
+                    "--port",
+                    "8015"
+                ],
+                "console": "integratedTerminal",
+                "env": {
+                    "ENV": "loc",
+                    "DAPR_HTTP_PORT": "5395",
+                    "DAPR_GRPC_PORT": "51003"
+                },
+                "cwd": "${workspaceFolder}/src/cezzis_com_cloudsync_api",
+                "serverReadyAction": {
+                    "action": "openExternally",
+                    "pattern": "Application startup complete.",
+                    "uriFormat": "http://localhost:8015/scalar/v1"
+                }
+            },
+            {
+                "name": "Docker Debug: Accounts API",
+                "type": "debugpy",
+                "request": "launch",
+                "preLaunchTask": "dapr-run-docker",
+                "module": "uvicorn",
+                "args": [
+                    "main:app",
+                    "--reload",
+                    "--port",
+                    "8015"
+                ],
+                "console": "integratedTerminal",
+                "env": {
+                    "ENV": "loc",
+                    "DAPR_HTTP_PORT": "5395",
+                    "DAPR_GRPC_PORT": "51003"
+                },
+                "cwd": "${workspaceFolder}/src/cezzis_com_cloudsync_api",
+                "serverReadyAction": {
+                    "action": "openExternally",
+                    "pattern": "Application startup complete.",
+                    "uriFormat": "http://localhost:8015/scalar/v1"
+                }
+            }
+        ]
+    }

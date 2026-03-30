@@ -1,0 +1,41 @@
+apiVersion: dapr.io/v1alpha1
+kind: Resiliency
+
+metadata:
+  name: cloudsync-api-dapr-resiliency
+
+spec:
+  policies:
+    retries:
+      # Retry policy for input bindings
+      bindingRetry:
+        policy: constant
+        duration: 5s
+        maxRetries: 3
+
+    # Circuit breaker to stop retrying after repeated failures
+    circuitBreakers:
+      bindingCircuitBreaker:
+        maxRequests: 1
+        interval: 10s
+        timeout: 30s
+        trip: consecutiveFailures >= 3
+
+  targets:
+    components:
+      bindings-idp-account-profile-sync-queue:
+        inbound:
+          retry: bindingRetry
+          circuitBreaker: bindingCircuitBreaker
+      bindings-idp-account-email-sync-queue:
+        inbound:
+          retry: bindingRetry
+          circuitBreaker: bindingCircuitBreaker
+      bindings-idp-account-password-sync-queue:
+        inbound:
+          retry: bindingRetry
+          circuitBreaker: bindingCircuitBreaker
+      bindings-zoho-email-dispatch-queue:
+        inbound:
+          retry: bindingRetry
+          circuitBreaker: bindingCircuitBreaker

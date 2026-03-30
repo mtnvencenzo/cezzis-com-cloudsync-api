@@ -1,0 +1,23 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cezzis-com-cloudsync-api
+  namespace: argocd
+  labels:
+    app.kubernetes.io/part-of: cezzis
+spec:
+  project: default
+  source:
+    repoURL: 'https://github.com/mtnvencenzo/cezzis-com-cloudsync-api.git'
+    targetRevision: main
+    path: .iac/k8s
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: cezzis
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - ApplyOutOfSyncOnly=false
+      - PruneLast=true

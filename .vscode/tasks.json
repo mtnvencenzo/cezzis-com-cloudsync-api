@@ -1,0 +1,121 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "OpenApiRoot",
+            "type": "shell",
+            "command": "xdg-open http://localhost:8015/scalar/v1",
+            "problemMatcher": []
+        },
+        {
+            "label": "dapr-run-docker",
+            "type": "shell",
+            "command": "dapr",
+            "args": [
+                "run",
+                "--app-id",
+                "cloudsync-api-dapr",
+                "--resources-path",
+                "${workspaceFolder}/.iac/dapr/docker-loc/",
+                "--config",
+                "${workspaceFolder}/.iac/dapr/docker-loc/dapr-config.yaml",
+                "--app-port",
+                "8015",
+                "--app-protocol",
+                "http",
+                "--dapr-http-port",
+                "5395",
+                "--dapr-grpc-port",
+                "51003",
+                "--metrics-port",
+                "9089",
+                "--scheduler-host-address",
+                "localhost:50006",
+                "--log-level",
+                "info",
+            ],
+            "isBackground": true,
+            "dependsOn": ["build"],
+            "options": {
+                "env": {
+                    "OTEL_EXPORTER_OTLP_HEADERS": "Authorization=Bearer bd97d99d-f52d-4827-84d5-3760cbc2c8ea",
+                    "OTEL_RESOURCE_ATTRIBUTES": "deployment.environment=loc",
+                    "DAPR_API_TOKEN": "2eae500b-b212-4c6c-90fe-d9d35b7ac1c4", // Dapr API token (sent from app to sidecar)
+                    "APP_API_TOKEN": "a023b707-5781-4e8c-9df0-f1b07cb6a0e1" // Application token (sent from sidecar to app)
+                }
+            },
+            "problemMatcher": {
+                "pattern": {
+                    "regexp": ".",
+                    "file": 1,
+                    "location": 2,
+                    "message": 3
+                },
+                "background": {
+                    "activeOnStart": true,
+                    "beginsPattern": "Starting Dapr",
+                    "endsPattern": "You're up and running!"
+                }
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            }
+        },
+        {
+            "label": "dapr-run-k8s",
+            "type": "shell",
+            "command": "dapr",
+            "args": [
+                "run",
+                "--app-id",
+                "cloudsync-api-dapr",
+                "--resources-path",
+                "${workspaceFolder}/.iac/dapr/k8s-loc/",
+                "--config",
+                "${workspaceFolder}/.iac/dapr/k8s-loc/dapr-config.yaml",
+                "--app-port",
+                "8015",
+                "--app-protocol",
+                "http",
+                "--dapr-http-port",
+                "5395",
+                "--dapr-grpc-port",
+                "51003",
+                "--metrics-port",
+                "9089",
+                "--scheduler-host-address",
+                "localhost:50006",
+                "--log-level",
+                "info",
+            ],
+            "isBackground": true,
+            "dependsOn": ["build"],
+            "options": {
+                "env": {
+                    "OTEL_EXPORTER_OTLP_HEADERS": "Authorization=Bearer bd97d99d-f52d-4827-84d5-3760cbc2c8ea",
+                    "OTEL_RESOURCE_ATTRIBUTES": "deployment.environment=loc",
+                    "DAPR_API_TOKEN": "2eae500b-b212-4c6c-90fe-d9d35b7ac1c4", // Dapr API token (sent from app to sidecar)
+                    "APP_API_TOKEN": "a023b707-5781-4e8c-9df0-f1b07cb6a0e1" // Application token (sent from sidecar to app)
+                }
+            },
+            "problemMatcher": {
+                "pattern": {
+                    "regexp": ".",
+                    "file": 1,
+                    "location": 2,
+                    "message": 3
+                },
+                "background": {
+                    "activeOnStart": true,
+                    "beginsPattern": "Starting Dapr",
+                    "endsPattern": "You're up and running!"
+                }
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            }
+        }
+    ]
+}

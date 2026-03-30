@@ -1,0 +1,41 @@
+apiVersion: dapr.io/v1alpha1
+kind: Resiliency
+metadata:
+  name: cloudsync-api-dapr-resiliency
+  namespace: cezzis
+  labels:
+    app.kubernetes.io/part-of: cezzis
+    app.kubernetes.io/managed-by: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "200"
+spec:
+  policies:
+    retries:
+      bindingRetry:
+        policy: constant
+        duration: 5s
+        maxRetries: 3
+    circuitBreakers:
+      bindingCircuitBreaker:
+        maxRequests: 1
+        interval: 10s
+        timeout: 30s
+        trip: consecutiveFailures >= 3
+  targets:
+    components:
+      bindings-idp-account-profile-sync-queue:
+        inbound:
+          retry: bindingRetry
+          circuitBreaker: bindingCircuitBreaker
+      bindings-idp-account-email-sync-queue:
+        inbound:
+          retry: bindingRetry
+          circuitBreaker: bindingCircuitBreaker
+      bindings-idp-account-password-sync-queue:
+        inbound:
+          retry: bindingRetry
+          circuitBreaker: bindingCircuitBreaker
+      bindings-zoho-email-dispatch-queue:
+        inbound:
+          retry: bindingRetry
+          circuitBreaker: bindingCircuitBreaker

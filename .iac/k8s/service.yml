@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: cezzis-com-cloudsync-api
+  namespace: cezzis
+  labels:
+    app: cezzis-com-cloudsync-api
+    app.kubernetes.io/part-of: cezzis
+    app.kubernetes.io/managed-by: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "300"
+spec:
+  type: ClusterIP
+  selector:
+    app: cezzis-com-cloudsync-api
+  ports:
+    - name: http
+      port: 8016
+      targetPort: 8016
+      protocol: TCP
