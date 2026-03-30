@@ -6,10 +6,7 @@ from cezzis_com_cloudsync_api.application.concerns.health.queries.readiness_chec
     ReadinessCheckQueryHandler,
 )
 from cezzis_com_cloudsync_api.application.concerns.integrations.events import (
-    AccountOwnedProfileUpdatedEventHandler,
-    ChangeAccountOwnedEmailEventHandler,
-    ChangeAccountOwnedPasswordEventHandler,
-    CocktailRecommendationEmailEventHandler,
+    CocktailUpdatedEventCommandHandler,
 )
 from cezzis_com_cloudsync_api.domain.config.app_options import AppOptions, get_app_options
 from cezzis_com_cloudsync_api.domain.config.dapr_options import DaprOptions, get_dapr_options
@@ -17,7 +14,7 @@ from cezzis_com_cloudsync_api.domain.config.oauth_options import OAuthOptions, g
 from cezzis_com_cloudsync_api.domain.config.otel_options import OTelOptions, get_otel_options
 from cezzis_com_cloudsync_api.domain.services.i_message_bus import IMessageBus
 from cezzis_com_cloudsync_api.infrastructure.dapr.dapr_client import DaprClient
-from cezzis_com_cloudsync_api.infrastructure.services.message_bus import MessageBus
+from cezzis_com_cloudsync_api.infrastructure.message_bus import MessageBus
 
 
 def create_injector() -> Injector:
@@ -35,16 +32,14 @@ class AppModule(Module):
         binder.bind(OAuthOptions, get_oauth_options(), scope=singleton)
         binder.bind(OTelOptions, get_otel_options(), scope=singleton)
         binder.bind(DaprOptions, get_dapr_options(), scope=singleton)
-
-        # Database
-        binder.bind(DBSessionProvider, DBSessionProvider, scope=singleton)
+        binder.bind(DaprOptions, get_dapr_options(), scope=singleton)
 
         # Query handlers
         binder.bind(HealthCheckQueryHandler, HealthCheckQueryHandler, scope=singleton)
         binder.bind(ReadinessCheckQueryHandler, ReadinessCheckQueryHandler, scope=singleton)
 
         # Integration event handlers
-        binder.bind(AccountOwnedProfileUpdatedEventHandler, AccountOwnedProfileUpdatedEventHandler, scope=singleton)
+        binder.bind(CocktailUpdatedEventCommandHandler, CocktailUpdatedEventCommandHandler, scope=singleton)
 
     @provider
     @singleton

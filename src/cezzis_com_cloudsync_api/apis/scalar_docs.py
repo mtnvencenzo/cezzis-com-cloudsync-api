@@ -15,5 +15,5 @@ class ScalarDocsRouter(APIRouter):
         return get_scalar_api_reference(
             openapi_url="/openapi.json",
             scalar_favicon_url="/static/favicon.svg",
-            title="Cezzi's Cocktails Accounts Api",
+            title="Cezzi's Cocktails CloudSync Api",
         )

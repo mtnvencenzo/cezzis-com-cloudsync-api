@@ -30,7 +30,6 @@ from cezzis_com_cloudsync_api.application.behaviors.otel.probe_telemetry_filter 
 )
 from cezzis_com_cloudsync_api.domain.config.app_options import AppOptions
 from cezzis_com_cloudsync_api.domain.config.oauth_options import OAuthOptions
-from cezzis_com_cloudsync_api.infrastructure.dapr.dapr_job_scheduler import schedule_init_job_background
 
 initialize_opentelemetry()
 injector = create_injector()
