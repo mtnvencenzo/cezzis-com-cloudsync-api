@@ -24,7 +24,7 @@ spec:
       annotations:
         dapr.io/enabled: "true"
         dapr.io/app-id: "cezzis-com-cloudsync-api"
-        dapr.io/app-port: "8016"
+        dapr.io/app-port: "8018"
         dapr.io/app-protocol: "http"
         dapr.io/log-level: "info"
         dapr.io/config: "cloudsync-api-dapr-config"
@@ -38,7 +38,7 @@ spec:
         - name: cezzis-com-cloudsync-api
           image: acrveceusgloshared001.azurecr.io/cezziscomcloudsyncapi
           ports:
-            - containerPort: 8016
+            - containerPort: 8018
               name: http
               protocol: TCP
           envFrom:
@@ -51,7 +51,7 @@ spec:
           startupProbe:
             httpGet:
               path: v1/liveness
-              port: 8016
+              port: 8018
             initialDelaySeconds: 5
             periodSeconds: 3
             timeoutSeconds: 5
@@ -59,14 +59,14 @@ spec:
           readinessProbe:
             httpGet:
               path: v1/readiness
-              port: 8016
+              port: 8018
             periodSeconds: 15
             timeoutSeconds: 30
             failureThreshold: 3
           livenessProbe:
             httpGet:
               path: v1/liveness
-              port: 8016
+              port: 8018
             periodSeconds: 15
             timeoutSeconds: 5
             failureThreshold: 3

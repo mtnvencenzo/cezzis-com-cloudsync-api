@@ -23,19 +23,7 @@ spec:
 
   targets:
     components:
-      bindings-idp-account-profile-sync-queue:
-        inbound:
-          retry: bindingRetry
-          circuitBreaker: bindingCircuitBreaker
-      bindings-idp-account-email-sync-queue:
-        inbound:
-          retry: bindingRetry
-          circuitBreaker: bindingCircuitBreaker
-      bindings-idp-account-password-sync-queue:
-        inbound:
-          retry: bindingRetry
-          circuitBreaker: bindingCircuitBreaker
-      bindings-zoho-email-dispatch-queue:
+      bindings-cocktail-updates-queue:
         inbound:
           retry: bindingRetry
           circuitBreaker: bindingCircuitBreaker

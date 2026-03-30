@@ -16,6 +16,7 @@ class IMessageBus(ABC):
         topic_name: str | None = None,
         content_type: str | None = "application/json",
         correlation_id: str | None = None,
+        raw_payload: bool = False,
     ) -> None:
         """Publish an event to a topic.
 
@@ -26,5 +27,6 @@ class IMessageBus(ABC):
             topic_name: The topic to publish to. Defaults to config_name if not provided.
             content_type: The content type of the message. Defaults to "application/json".
             correlation_id: The correlation ID for tracing. Defaults to a new UUID if not provided.
+            raw_payload: Whether to publish as raw payload without CloudEvent wrapping. Defaults to False.
         """
         ...

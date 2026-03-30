@@ -30,15 +30,10 @@ COPY --from=builder /app/src/dist/*.tar.gz ./
 RUN pip install --no-cache-dir --disable-pip-version-check *.tar.gz && rm *.tar.gz
 COPY ./src/cezzis_com_cloudsync_api/static ./static
 
-# Copy Alembic configuration and migrations for database schema management
-# Use the Docker-specific alembic config that points to ./migrations
-COPY ./alembic.docker.ini ./alembic.ini
-COPY ./src/cezzis_com_cloudsync_api/infrastructure/db/migrations ./migrations
-
 # Set Python to run in unbuffered mode for better logging
 ENV PYTHONUNBUFFERED=1
 
-EXPOSE 8016
+EXPOSE 8018
 
 # Run the application using the installed package
-CMD ["uvicorn", "cezzis_com_cloudsync_api.main:app", "--host", "0.0.0.0", "--port", "8016"]
+CMD ["uvicorn", "cezzis_com_cloudsync_api.main:app", "--host", "0.0.0.0", "--port", "8018"]

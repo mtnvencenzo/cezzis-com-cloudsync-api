@@ -18,11 +18,15 @@ from cezzis_com_cloudsync_api.infrastructure.message_bus import MessageBus
 
 
 def create_injector() -> Injector:
-    return Injector([AppModule()])
+    _injector = Injector([AppModule()])
 
+    def _mediator_manager(handler_class, is_behavior=False):
+        return _injector.get(handler_class)
 
-def mediator_manager(handler_class, is_behavior=False):
-    return injector.get(handler_class)
+    # Re-bind the Mediator now that we have the injector reference
+    _injector.binder.bind(Mediator, Mediator(handler_class_manager=_mediator_manager), scope=singleton)
+
+    return _injector
 
 
 class AppModule(Module):
@@ -31,7 +35,6 @@ class AppModule(Module):
         binder.bind(AppOptions, get_app_options(), scope=singleton)
         binder.bind(OAuthOptions, get_oauth_options(), scope=singleton)
         binder.bind(OTelOptions, get_otel_options(), scope=singleton)
-        binder.bind(DaprOptions, get_dapr_options(), scope=singleton)
         binder.bind(DaprOptions, get_dapr_options(), scope=singleton)
 
         # Query handlers
@@ -52,12 +55,3 @@ class AppModule(Module):
     def provide_message_bus(self, dapr_client: DaprClient) -> IMessageBus:
         """Provide the message bus implementation."""
         return MessageBus(dapr_client)
-
-    @provider
-    @singleton
-    def provide_mediator(self) -> Mediator:
-        """Provide the mediator."""
-        return Mediator(handler_class_manager=mediator_manager)
-
-
-injector = create_injector()

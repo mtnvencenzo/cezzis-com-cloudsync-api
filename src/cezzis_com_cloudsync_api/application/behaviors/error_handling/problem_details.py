@@ -23,7 +23,7 @@ class ProblemDetails(BaseModel):
                 "title": "Unprocessable Entity",
                 "status": 422,
                 "detail": "Validation failed for one or more fields",
-                "instance": "/v1/accounts",
+                "instance": "/v1/integrations",
                 "errors": {
                     "id": ["Field is required"],
                 },

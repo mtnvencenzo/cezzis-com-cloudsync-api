@@ -58,7 +58,7 @@ jobs:
       artifact_name: 'cezzis_com_cloudsync_api'
       unpack_filename: 'cezzis_com_cloudsync_api-${{ needs.gitVersion.outputs.semVer }}.tar.gz'
       unpack_directory: './cezzis_com_cloudsync_api-${{ needs.gitVersion.outputs.semVer }}'
-      setup_files: '["./Dockerfile", "./README.md", "./poetry.lock", "./pyproject.toml", "./.dockerignore", "./alembic.docker.ini"]'
+      setup_files: '["./Dockerfile", "./README.md", "./poetry.lock", "./pyproject.toml", "./.dockerignore"]'
       version: ${{ needs.gitVersion.outputs.semVer }}
       generate_stubs: false
 

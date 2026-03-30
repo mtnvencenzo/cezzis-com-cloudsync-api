@@ -7,7 +7,6 @@ from importlib.metadata import version
 from cezzis_otel import OTelSettings, initialize_otel, shutdown_otel
 from opentelemetry.instrumentation.httpx import HTTPXClientInstrumentor
 from opentelemetry.instrumentation.requests import RequestsInstrumentor
-from opentelemetry.instrumentation.sqlalchemy import SQLAlchemyInstrumentor
 
 from cezzis_com_cloudsync_api.application.behaviors.otel.probe_telemetry_filter import ProbeLoggingFilter
 from cezzis_com_cloudsync_api.domain.config import get_otel_options
@@ -49,7 +48,6 @@ def initialize_opentelemetry() -> None:
         configure_tracing=lambda _: (
             RequestsInstrumentor().instrument(),
             HTTPXClientInstrumentor().instrument(),
-            SQLAlchemyInstrumentor().instrument(),
             None,
         )[-1],
     )

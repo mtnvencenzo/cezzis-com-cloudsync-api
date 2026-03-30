@@ -41,7 +41,7 @@ class HealthCheckRouter(APIRouter):
 
     async def readiness_check(self, response: Response) -> HealthCheckRs:
         """
-        Performs a readiness check verifying connectivity to Dapr components (messaging) and the Postgres database.
+        Performs a readiness check verifying connectivity to Dapr components (messaging).
         """
 
         result = cast(HealthCheckRs, await self.mediator.send_async(ReadinessCheckQuery()))

@@ -1,6 +1,7 @@
 from unittest.mock import MagicMock, patch
 
 import pytest
+
 from cezzis_com_cloudsync_api.apis.scalar_docs import ScalarDocsRouter
 
 
@@ -38,5 +39,5 @@ class TestScalarDocsRouter:
         mock_get_scalar.assert_called_once_with(
             openapi_url="/openapi.json",
             scalar_favicon_url="/static/favicon.svg",
-            title="Cezzi's Cocktails Accounts Api",
+            title="Cezzi's Cocktails CloudSync Api",
         )

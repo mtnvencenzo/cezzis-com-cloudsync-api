@@ -2,14 +2,14 @@ apiVersion: dapr.io/v1alpha1
 kind: Component
 
 metadata:
-  name: bindings-idp-account-email-sync-queue
+  name: bindings-cocktail-updates-queue
 
 spec:
   type: bindings.rabbitmq
   version: v1
   metadata:
     - name: queueName
-      value: "idp-account-email-sync-queue"
+      value: "cocktail-updates-queue"
     - name: host
       secretKeyRef:
         name: rabbitmq_connectionstring
@@ -19,6 +19,7 @@ spec:
       value: "false"
     - name: direction
       value: "input"
+      
 scopes:
   - cloudsync-api-dapr
 

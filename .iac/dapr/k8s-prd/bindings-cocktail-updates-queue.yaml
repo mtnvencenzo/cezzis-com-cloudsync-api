@@ -1,7 +1,7 @@
 apiVersion: dapr.io/v1alpha1
 kind: Component
 metadata:
-  name: bindings-idp-account-email-sync-queue
+  name: bindings-cocktail-updates-queue
   namespace: cezzis
   labels:
     app.kubernetes.io/part-of: cezzis
@@ -13,7 +13,7 @@ spec:
   version: v1
   metadata:
     - name: queueName
-      value: "idp-account-email-sync-queue"
+      value: "cocktail-updates-queue"
     - name: host
       secretKeyRef:
         name: cezzis-com-cloudsync-api-shared-secrets
@@ -25,6 +25,6 @@ spec:
     - name: direction
       value: "input"
 scopes:
-  - cloudsync-api-dapr
+  - cezzis-com-cloudsync-api
 auth:
   secretStore: kubernetes

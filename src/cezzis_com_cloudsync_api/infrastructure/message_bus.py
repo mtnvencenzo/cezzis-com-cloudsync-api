@@ -29,6 +29,7 @@ class MessageBus(IMessageBus):
         topic_name: str | None = None,
         content_type: str | None = "application/json",
         correlation_id: str | None = None,
+        raw_payload: bool = False,
     ) -> None:
         """Publish an event to a topic.
 
@@ -39,6 +40,7 @@ class MessageBus(IMessageBus):
             topic_name: The topic to publish to. Defaults to config_name if not provided.
             content_type: The content type of the message. Defaults to "application/json".
             correlation_id: The correlation ID for tracing. Defaults to a new UUID if not provided.
+            raw_payload: Whether to publish as raw payload without CloudEvent wrapping. Defaults to False.
         """
         useable_topic_name = topic_name or config_name
         useable_correlation_id = correlation_id or str(uuid.uuid4())
@@ -51,13 +53,15 @@ class MessageBus(IMessageBus):
             useable_correlation_id,
         )
 
-        # Build metadata matching C# implementation for servicebus and rabbitmq compatibility
         metadata = {
             "CorrelationId": useable_correlation_id,
             "ContentType": content_type or "application/json",
-            "Label": message_label,  # for servicebus
-            "routingKey": message_label,  # for rabbitmq
+            "Label": message_label,
+            "routingKey": message_label,
         }
+
+        if raw_payload:
+            metadata["rawPayload"] = "true"
 
         await self._dapr_client.publish_event(
             pubsub_name=config_name,

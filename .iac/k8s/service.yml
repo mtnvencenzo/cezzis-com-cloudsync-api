@@ -15,6 +15,6 @@ spec:
     app: cezzis-com-cloudsync-api
   ports:
     - name: http
-      port: 8016
-      targetPort: 8016
+      port: 8018
+      targetPort: 8018
       protocol: TCP

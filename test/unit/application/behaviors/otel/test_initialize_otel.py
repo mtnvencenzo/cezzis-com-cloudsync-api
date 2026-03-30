@@ -2,6 +2,7 @@ import atexit
 from unittest.mock import MagicMock, call, patch
 
 import pytest
+
 from cezzis_com_cloudsync_api.application.behaviors.otel.initialize_otel import initialize_opentelemetry
 
 
@@ -15,10 +16,8 @@ class TestInitializeOtel:
     @patch("cezzis_com_cloudsync_api.application.behaviors.otel.initialize_otel.socket.gethostname")
     @patch("cezzis_com_cloudsync_api.application.behaviors.otel.initialize_otel.RequestsInstrumentor")
     @patch("cezzis_com_cloudsync_api.application.behaviors.otel.initialize_otel.HTTPXClientInstrumentor")
-    @patch("cezzis_com_cloudsync_api.application.behaviors.otel.initialize_otel.SQLAlchemyInstrumentor")
     def test_initialize_opentelemetry_success(
         self,
-        mock_sqlalchemy_instrumentor,
         mock_httpx_instrumentor,
         mock_requests_instrumentor,
         mock_hostname,
@@ -44,10 +43,8 @@ class TestInitializeOtel:
 
         mock_requests_inst = MagicMock()
         mock_httpx_inst = MagicMock()
-        mock_sqlalchemy_inst = MagicMock()
         mock_requests_instrumentor.return_value = mock_requests_inst
         mock_httpx_instrumentor.return_value = mock_httpx_inst
-        mock_sqlalchemy_instrumentor.return_value = mock_sqlalchemy_inst
 
         with patch.dict("os.environ", {"ENV": "test"}):
             initialize_opentelemetry()
@@ -73,10 +70,8 @@ class TestInitializeOtel:
     @patch("cezzis_com_cloudsync_api.application.behaviors.otel.initialize_otel.socket.gethostname")
     @patch("cezzis_com_cloudsync_api.application.behaviors.otel.initialize_otel.RequestsInstrumentor")
     @patch("cezzis_com_cloudsync_api.application.behaviors.otel.initialize_otel.HTTPXClientInstrumentor")
-    @patch("cezzis_com_cloudsync_api.application.behaviors.otel.initialize_otel.SQLAlchemyInstrumentor")
     def test_initialize_opentelemetry_with_settings(
         self,
-        mock_sqlalchemy_instrumentor,
         mock_httpx_instrumentor,
         mock_requests_instrumentor,
         mock_hostname,

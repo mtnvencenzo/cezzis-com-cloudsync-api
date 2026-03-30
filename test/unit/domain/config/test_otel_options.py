@@ -2,6 +2,7 @@ import os
 from unittest.mock import patch
 
 import pytest
+
 from cezzis_com_cloudsync_api.domain.config.otel_options import (
     OTelOptions,
     get_otel_options,

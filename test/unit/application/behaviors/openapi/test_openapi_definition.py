@@ -2,9 +2,10 @@ import os
 from unittest.mock import MagicMock, patch
 
 import pytest
+from fastapi import FastAPI
+
 from cezzis_com_cloudsync_api.application.behaviors.openapi.openapi_definition import openapi_definition
 from cezzis_com_cloudsync_api.domain.config.oauth_options import OAuthOptions
-from fastapi import FastAPI
 
 
 class TestOpenApiDefinition:
@@ -43,7 +44,7 @@ class TestOpenApiDefinition:
         # Verify get_openapi was called
         mock_get_openapi.assert_called_once()
         call_kwargs = mock_get_openapi.call_args[1]
-        assert call_kwargs["title"] == "Cezzi's Cocktails Accounts Api"
+        assert call_kwargs["title"] == "Cezzi's Cocktails CloudSync Api"
         assert call_kwargs["version"] == "1.0.0"
 
         # Verify security scheme was generated
@@ -52,10 +53,7 @@ class TestOpenApiDefinition:
             client_id="test-client-id",
             domain="auth.example.com",
             audience="api://cocktails",
-            scopes={
-                "write:owned-account": "Create and update owned account data",
-                "read:owned-account": "Read owned account data",
-            },
+            scopes={},
             pkce="SHA-256",
         )
 
@@ -96,10 +94,7 @@ class TestOpenApiDefinition:
             client_id="test-client-id",
             domain="auth.example.com",
             audience="api://cocktails",
-            scopes={
-                "write:owned-account": "Create and update owned account data",
-                "read:owned-account": "Read owned account data",
-            },
+            scopes={},
             pkce=None,
         )
 

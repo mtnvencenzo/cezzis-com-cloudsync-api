@@ -31,9 +31,6 @@ class DaprOptions(BaseSettings):
     # Dapr standard: APP_API_TOKEN — sidecar also reads this to know what to send
     app_api_token: str = Field(default="", validation_alias="APP_API_TOKEN")
 
-    # Whether the init job is enabled (runs migrations and seeds test account)
-    init_job_enabled: bool = Field(default=True, validation_alias="DAPR_INIT_JOB_ENABLED")
-
     @property
     def http_endpoint(self) -> str:
         """Get the Dapr HTTP endpoint."""

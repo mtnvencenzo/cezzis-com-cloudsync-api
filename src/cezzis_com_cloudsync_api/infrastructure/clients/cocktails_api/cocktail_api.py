@@ -13,25 +13,21 @@ from pydantic import AwareDatetime, BaseModel, Field
 class CocktailImageModel(BaseModel):
     uri: str = Field(
         ...,
-        description='The uri of the image',
-        examples=[
-            'https://cdn.cezzis.com/cocktails/traditional-clover-club-cocktail-main.webp'
-        ],
+        description="The uri of the image",
+        examples=["https://cdn.cezzis.com/cocktails/traditional-clover-club-cocktail-main.webp"],
     )
-    width: int = Field(..., description='The width of the image', examples=[800])
-    height: int = Field(..., description='The height of the image', examples=[533])
+    width: int = Field(..., description="The width of the image", examples=[800])
+    height: int = Field(..., description="The height of the image", examples=[533])
 
 
 class CocktailImageModel2(BaseModel):
     uri: str = Field(
         ...,
-        description='The uri of the image',
-        examples=[
-            'https://cdn.cezzis.com/cocktails/traditional-clover-club-cocktail-main.webp'
-        ],
+        description="The uri of the image",
+        examples=["https://cdn.cezzis.com/cocktails/traditional-clover-club-cocktail-main.webp"],
     )
-    width: int = Field(..., description='The width of the image', examples=[800])
-    height: int = Field(..., description='The height of the image', examples=[533])
+    width: int = Field(..., description="The width of the image", examples=[800])
+    height: int = Field(..., description="The height of the image", examples=[533])
 
 
 class CocktailKeywordsModel(BaseModel):
@@ -39,19 +35,17 @@ class CocktailKeywordsModel(BaseModel):
     The keywords associated with the cocktail recipe
     """
 
-    keywordsBaseSpirit: list[str] = Field(..., description='Base spirit keywords')
-    keywordsSpiritSubtype: list[str] = Field(..., description='Spirit subtype keywords')
-    keywordsFlavorProfile: list[str] = Field(..., description='Flavor profile keywords')
-    keywordsCocktailFamily: list[str] = Field(
-        ..., description='Cocktail family keywords'
-    )
-    keywordsTechnique: list[str] = Field(..., description='Technique keywords')
-    keywordsStrength: str = Field(..., description='Strength keyword')
-    keywordsTemperature: str = Field(..., description='Temperature keyword')
-    keywordsSeason: list[str] = Field(..., description='Season keywords')
-    keywordsOccasion: list[str] = Field(..., description='Occasion keywords')
-    keywordsMood: list[str] = Field(..., description='Mood keywords')
-    keywordsSearchTerms: list[str] = Field(..., description='Search terms keywords')
+    keywordsBaseSpirit: list[str] = Field(..., description="Base spirit keywords")
+    keywordsSpiritSubtype: list[str] = Field(..., description="Spirit subtype keywords")
+    keywordsFlavorProfile: list[str] = Field(..., description="Flavor profile keywords")
+    keywordsCocktailFamily: list[str] = Field(..., description="Cocktail family keywords")
+    keywordsTechnique: list[str] = Field(..., description="Technique keywords")
+    keywordsStrength: str = Field(..., description="Strength keyword")
+    keywordsTemperature: str = Field(..., description="Temperature keyword")
+    keywordsSeason: list[str] = Field(..., description="Season keywords")
+    keywordsOccasion: list[str] = Field(..., description="Occasion keywords")
+    keywordsMood: list[str] = Field(..., description="Mood keywords")
+    keywordsSearchTerms: list[str] = Field(..., description="Search terms keywords")
 
 
 class CocktailRatingModel(BaseModel):
@@ -59,28 +53,14 @@ class CocktailRatingModel(BaseModel):
     A ratings for this cocktail
     """
 
-    oneStars: int = Field(
-        ..., description='The number of one star ratings', examples=['5']
-    )
-    twoStars: int = Field(
-        ..., description='The number of two star ratings', examples=['1']
-    )
-    threeStars: int = Field(
-        ..., description='The number of three star ratings', examples=['1']
-    )
-    fourStars: int = Field(
-        ..., description='The number of four star ratings', examples=['1']
-    )
-    fiveStars: int = Field(
-        ..., description='The number of five star ratings', examples=['1']
-    )
-    totalStars: int = Field(
-        ..., description='The total number of stars given', examples=['1']
-    )
-    rating: float = Field(..., description='The actual overal rating', examples=['3.5'])
-    ratingCount: int = Field(
-        ..., description='The total number of ratings given', examples=['1']
-    )
+    oneStars: int = Field(..., description="The number of one star ratings", examples=["5"])
+    twoStars: int = Field(..., description="The number of two star ratings", examples=["1"])
+    threeStars: int = Field(..., description="The number of three star ratings", examples=["1"])
+    fourStars: int = Field(..., description="The number of four star ratings", examples=["1"])
+    fiveStars: int = Field(..., description="The number of five star ratings", examples=["1"])
+    totalStars: int = Field(..., description="The total number of stars given", examples=["1"])
+    rating: float = Field(..., description="The actual overal rating", examples=["3.5"])
+    ratingCount: int = Field(..., description="The total number of ratings given", examples=["1"])
 
 
 class DocumentFormat(Enum):
@@ -88,46 +68,42 @@ class DocumentFormat(Enum):
     The format that the document content is in
     """
 
-    markdown = 'markdown'
+    markdown = "markdown"
 
 
 class GlasswareTypeModel(Enum):
-    none = 'none'
-    rocks = 'rocks'
-    highball = 'highball'
-    shotGlass = 'shotGlass'
-    coupe = 'coupe'
-    copperMug = 'copperMug'
-    collins = 'collins'
-    cocktailGlass = 'cocktailGlass'
-    wineGlass = 'wineGlass'
-    flute = 'flute'
-    lowball = 'lowball'
-    fizz = 'fizz'
-    tikiMug = 'tikiMug'
-    pintGlass = 'pintGlass'
-    julepTin = 'julepTin'
-    doubleRocks = 'doubleRocks'
-    hurricane = 'hurricane'
-    hollowedPineapple = 'hollowedPineapple'
-    snifter = 'snifter'
-    scorpionBowl = 'scorpionBowl'
+    none = "none"
+    rocks = "rocks"
+    highball = "highball"
+    shotGlass = "shotGlass"
+    coupe = "coupe"
+    copperMug = "copperMug"
+    collins = "collins"
+    cocktailGlass = "cocktailGlass"
+    wineGlass = "wineGlass"
+    flute = "flute"
+    lowball = "lowball"
+    fizz = "fizz"
+    tikiMug = "tikiMug"
+    pintGlass = "pintGlass"
+    julepTin = "julepTin"
+    doubleRocks = "doubleRocks"
+    hurricane = "hurricane"
+    hollowedPineapple = "hollowedPineapple"
+    snifter = "snifter"
+    scorpionBowl = "scorpionBowl"
 
 
 class IngredientApplicationModel(Enum):
-    base = 'base'
-    additional = 'additional'
-    garnishment = 'garnishment'
-    muddle = 'muddle'
+    base = "base"
+    additional = "additional"
+    garnishment = "garnishment"
+    muddle = "muddle"
 
 
 class IngredientFilterModel(BaseModel):
-    id: str = Field(
-        ..., description='The filter identifier', examples=['classification-name']
-    )
-    name: str = Field(
-        ..., description='The display name of the filter', examples=['Name Of Filter']
-    )
+    id: str = Field(..., description="The filter identifier", examples=["classification-name"])
+    name: str = Field(..., description="The display name of the filter", examples=["Name Of Filter"])
 
 
 class IngredientRequirementTypeModel(Enum):
@@ -135,46 +111,46 @@ class IngredientRequirementTypeModel(Enum):
     Whether or not this ingredient is required ('Required' or 'Optional')
     """
 
-    none = 'none'
-    optional = 'optional'
-    required = 'required'
+    none = "none"
+    optional = "optional"
+    required = "required"
 
 
 class IngredientTypeModel(Enum):
-    herb = 'herb'
-    fruit = 'fruit'
-    juice = 'juice'
-    bitters = 'bitters'
-    syrup = 'syrup'
-    protein = 'protein'
-    flowers = 'flowers'
-    sauce = 'sauce'
-    vegetable = 'vegetable'
-    dilution = 'dilution'
-    beer = 'beer'
-    spirit = 'spirit'
-    liqueur = 'liqueur'
-    wine = 'wine'
-    champagne = 'champagne'
+    herb = "herb"
+    fruit = "fruit"
+    juice = "juice"
+    bitters = "bitters"
+    syrup = "syrup"
+    protein = "protein"
+    flowers = "flowers"
+    sauce = "sauce"
+    vegetable = "vegetable"
+    dilution = "dilution"
+    beer = "beer"
+    spirit = "spirit"
+    liqueur = "liqueur"
+    wine = "wine"
+    champagne = "champagne"
 
 
 class InstructionStepModel(BaseModel):
     display: str = Field(
         ...,
-        description='The displayable value for the instruction step',
+        description="The displayable value for the instruction step",
         examples=[
-            'Combine the gin, lemon juice, raspberry syrup, and egg white in a shaker without ice and dry shake (shake without ice) for about 10 seconds to make the foam.'
+            "Combine the gin, lemon juice, raspberry syrup, and egg white in a shaker without ice and dry shake (shake without ice) for about 10 seconds to make the foam."
         ],
     )
     order: int = Field(
         ...,
-        description='The order of the instruction step in which it should be performed',
+        description="The order of the instruction step in which it should be performed",
         examples=[1],
     )
 
 
 class LegalDocumentRs(BaseModel):
-    document: str = Field(..., description='The document content')
+    document: str = Field(..., description="The document content")
     format: DocumentFormat
 
 
@@ -183,13 +159,13 @@ class PreparationTypeModel(Enum):
     Any preparation that should be made with this ingredient
     """
 
-    none = 'none'
-    chilled = 'chilled'
-    freshlySqueezed = 'freshlySqueezed'
-    peeledAndJuiced = 'peeledAndJuiced'
-    freshlyGrated = 'freshlyGrated'
-    quartered = 'quartered'
-    freshPressed = 'freshPressed'
+    none = "none"
+    chilled = "chilled"
+    freshlySqueezed = "freshlySqueezed"
+    peeledAndJuiced = "peeledAndJuiced"
+    freshlyGrated = "freshlyGrated"
+    quartered = "quartered"
+    freshPressed = "freshPressed"
 
 
 class ProblemDetails(BaseModel):
@@ -203,8 +179,8 @@ class ProblemDetails(BaseModel):
 class PublishCocktailsRq(BaseModel):
     cocktailIds: list[str] = Field(
         ...,
-        description='A list of cocktail IDs to publish',
-        examples=[['pegu-club', 'aperol-spritz', 'margarita']],
+        description="A list of cocktail IDs to publish",
+        examples=[["pegu-club", "aperol-spritz", "margarita"]],
     )
 
 
@@ -213,100 +189,92 @@ class UofMTypeModel(Enum):
     The unit of measure when using this ingredient in a cocktail recipe
     """
 
-    none = 'none'
-    ounces = 'ounces'
-    dashes = 'dashes'
-    tablespoon = 'tablespoon'
-    topoff = 'topoff'
-    item = 'item'
-    teaspoon = 'teaspoon'
-    toTaste = 'toTaste'
-    barspoon = 'barspoon'
-    cups = 'cups'
-    splash = 'splash'
-    discretion = 'discretion'
+    none = "none"
+    ounces = "ounces"
+    dashes = "dashes"
+    tablespoon = "tablespoon"
+    topoff = "topoff"
+    item = "item"
+    teaspoon = "teaspoon"
+    toTaste = "toTaste"
+    barspoon = "barspoon"
+    cups = "cups"
+    splash = "splash"
+    discretion = "discretion"
 
 
 class CocktailIngredientFiltersRs(BaseModel):
     glassware: list[IngredientFilterModel] = Field(
         ...,
-        description='The cocktail ingredient filters for searching against recommended glassware',
+        description="The cocktail ingredient filters for searching against recommended glassware",
     )
-    spirits: list[Any] = Field(
-        ..., description='The cocktail ingredient filters for searching against spirits'
-    )
+    spirits: list[Any] = Field(..., description="The cocktail ingredient filters for searching against spirits")
     liqueurs: list[Any] = Field(
         ...,
-        description='The cocktail ingredient filters for searching against liqueurs',
+        description="The cocktail ingredient filters for searching against liqueurs",
     )
-    fruits: list[Any] = Field(
-        ..., description='The cocktail ingredient filters for searching against friuts'
-    )
+    fruits: list[Any] = Field(..., description="The cocktail ingredient filters for searching against friuts")
     vegetables: list[Any] = Field(
         ...,
-        description='The cocktail ingredient filters for searching against vegetables',
+        description="The cocktail ingredient filters for searching against vegetables",
     )
     herbsAndFlowers: list[Any] = Field(
         ...,
-        description='The cocktail ingredient filters for searching against herbs and flowers',
+        description="The cocktail ingredient filters for searching against herbs and flowers",
     )
     syrupsAndSauces: list[Any] = Field(
         ...,
-        description='The cocktail ingredient filters for searching against syrups and sauces',
+        description="The cocktail ingredient filters for searching against syrups and sauces",
     )
-    bitters: list[Any] = Field(
-        ..., description='The cocktail ingredient filters for searching against bitters'
-    )
+    bitters: list[Any] = Field(..., description="The cocktail ingredient filters for searching against bitters")
     proteins: list[Any] = Field(
         ...,
-        description='The cocktail ingredient filters for searching against proteins',
+        description="The cocktail ingredient filters for searching against proteins",
     )
-    juices: list[Any] = Field(
-        ..., description='The cocktail ingredient filters for searching against juices'
-    )
+    juices: list[Any] = Field(..., description="The cocktail ingredient filters for searching against juices")
     dilutions: list[Any] = Field(
         ...,
-        description='The cocktail ingredient filters for searching against dilutions',
+        description="The cocktail ingredient filters for searching against dilutions",
     )
     beerWineChampagne: list[Any] = Field(
         ...,
-        description='The cocktail ingredient filters for searching against beers, wines and champagnes',
+        description="The cocktail ingredient filters for searching against beers, wines and champagnes",
     )
     eras: list[Any] = Field(
         ...,
-        description='The cocktail ingredient filters for searching against eras when cocktails were established',
+        description="The cocktail ingredient filters for searching against eras when cocktails were established",
     )
 
 
 class IngredientModel(BaseModel):
-    name: str = Field(..., description='The name of the ingredient', examples=['Gin'])
+    name: str = Field(..., description="The name of the ingredient", examples=["Gin"])
     uoM: UofMTypeModel
     requirement: IngredientRequirementTypeModel
     display: str = Field(
         ...,
-        description='Gets the complete display value for the ingredient including units and measurments',
-        examples=['1 1/2 ounces gin'],
+        description="Gets the complete display value for the ingredient including units and measurments",
+        examples=["1 1/2 ounces gin"],
     )
     units: float = Field(
         ...,
-        description='The number of units to use in relation to the UoM (unit of measure) in the cocktail recipe',
+        description="The number of units to use in relation to the UoM (unit of measure) in the cocktail recipe",
         examples=[1.5],
     )
     preparation: PreparationTypeModel
     suggestions: str = Field(
         ...,
-        description='Suggestion when using this ingredient',
-        examples=['Preferably Plymouth'],
+        description="Suggestion when using this ingredient",
+        examples=["Preferably Plymouth"],
     )
     types: list[IngredientTypeModel] = Field(
         ...,
-        description='The ingredient types that this ingredient is in relation to the cocktail recipe',
-        examples=[['bitters', 'spirit']],
+        description="The ingredient types that this ingredient is in relation to the cocktail recipe",
+        examples=[["bitters", "spirit"]],
     )
     applications: list[IngredientApplicationModel] = Field(
         ...,
-        description='The ingredient applications that this ingredient is in relation to the cocktail recipe',
-        examples=[['base', 'garnishment']],
+        description="The ingredient applications that this ingredient is in relation to the cocktail recipe",
+        examples=[["base", "garnishment"]],
     )
 
 
@@ -317,80 +285,74 @@ class CocktailModel(BaseModel):
 
     id: str = Field(
         ...,
-        description='The cocktail recipe unique identifier',
-        examples=['clover-club'],
+        description="The cocktail recipe unique identifier",
+        examples=["clover-club"],
     )
-    title: str = Field(
-        ..., description='The name of the cocktail recipe', examples=['Clover Club']
-    )
+    title: str = Field(..., description="The name of the cocktail recipe", examples=["Clover Club"])
     descriptiveTitle: str = Field(
         ...,
-        description='A more descriptive title for the cocktail recipe, generally used as an editorial title',
-        examples=['Clover Club: A Pink-Hued Classic'],
+        description="A more descriptive title for the cocktail recipe, generally used as an editorial title",
+        examples=["Clover Club: A Pink-Hued Classic"],
     )
     description: str = Field(
         ...,
-        description='A brief editorial description for the cocktail recipe',
+        description="A brief editorial description for the cocktail recipe",
         examples=[
             "A classic pre-Prohibition cocktail made with gin, raspberry syrup, lemon juice, and egg white. Named after a Philadelphia men's club, it's a smooth, frothy, and slightly tart cocktail."
         ],
     )
     content: str = Field(
         ...,
-        description='The complete descriptive cocktail recipe including ingredients, directions and historical information in markdown format',
-        examples=['--markdown content--'],
+        description="The complete descriptive cocktail recipe including ingredients, directions and historical information in markdown format",
+        examples=["--markdown content--"],
     )
     publishedOn: AwareDatetime = Field(
         ...,
-        description='The date this cocktail recipe was published on Cezzis.Com',
-        examples=['2024-05-24T00:00:00-07:00'],
+        description="The date this cocktail recipe was published on Cezzis.Com",
+        examples=["2024-05-24T00:00:00-07:00"],
     )
     modifiedOn: AwareDatetime = Field(
         ...,
-        description='The date this cocktail recipe was last modified on Cezzis.Com',
-        examples=['2024-05-24T00:00:00-07:00'],
+        description="The date this cocktail recipe was last modified on Cezzis.Com",
+        examples=["2024-05-24T00:00:00-07:00"],
     )
-    serves: int = Field(
-        ..., description='The number of people the cocktail recipe serves', examples=[1]
-    )
+    serves: int = Field(..., description="The number of people the cocktail recipe serves", examples=[1])
     prepTimeMinutes: int = Field(
         ...,
-        description='The average number of minutes to build the cocktail using this recipe',
+        description="The average number of minutes to build the cocktail using this recipe",
         examples=[5],
     )
     isIba: bool = Field(
         ...,
-        description='Whether or not the cocktail represented by this recipe is recognized by the International Bartenders Association',
+        description="Whether or not the cocktail represented by this recipe is recognized by the International Bartenders Association",
         examples=[True],
     )
-    mainImages: list[CocktailImageModel] = Field(
-        ..., description='A list of primary images for the cocktail recipe'
-    )
+    mainImages: list[CocktailImageModel] = Field(..., description="A list of primary images for the cocktail recipe")
     searchTiles: list[CocktailImageModel2] = Field(
         ...,
-        description='A list of secondary, smaller sized images for the cocktail recipe',
+        description="A list of secondary, smaller sized images for the cocktail recipe",
     )
     glassware: list[GlasswareTypeModel] = Field(
         ...,
-        description='The recommended glassware to use when serving the cocktail',
-        examples=[['coupe', 'cocktailGlass']],
+        description="The recommended glassware to use when serving the cocktail",
+        examples=[["coupe", "cocktailGlass"]],
     )
     rating: CocktailRatingModel
     searchableTitles: list[str] = Field(
         ...,
-        description='A list of titles that are queried against when issuing cocktail recipe search queries',
-        examples=[['Clover Club', 'Clover Club: A Pink-Hued Classic']],
+        description="A list of titles that are queried against when issuing cocktail recipe search queries",
+        examples=[["Clover Club", "Clover Club: A Pink-Hued Classic"]],
     )
     tags: list[str] = Field(
         ...,
-        description='A list of taxonomy tags defining the cocktail recipe',
-        examples=[['Traditional']],
+        description="A list of taxonomy tags defining the cocktail recipe",
+        examples=[["Traditional"]],
     )
     ingredients: list[IngredientModel] = Field(
-        ..., description='The list of ingredients that make up the cocktail recipe'
+        ..., description="The list of ingredients that make up the cocktail recipe"
     )
     instructions: list[InstructionStepModel] = Field(
-        ..., description='The list of instructions to make the cocktail recipe'
+        ..., description="The list of instructions to make the cocktail recipe"
     )
     keywords: CocktailKeywordsModel
 

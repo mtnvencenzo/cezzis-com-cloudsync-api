@@ -1,17 +1,18 @@
 import logging
 
 import pytest
-from cezzis_com_cloudsync_api.application.behaviors.otel.probe_telemetry_filter import (
-    ProbeLoggingFilter,
-    ProbeTelemetryMiddleware,
-    _is_probe_request,
-)
 from opentelemetry.context import _SUPPRESS_INSTRUMENTATION_KEY, get_value
 from starlette.applications import Starlette
 from starlette.requests import Request
 from starlette.responses import PlainTextResponse
 from starlette.routing import Route
 from starlette.testclient import TestClient
+
+from cezzis_com_cloudsync_api.application.behaviors.otel.probe_telemetry_filter import (
+    ProbeLoggingFilter,
+    ProbeTelemetryMiddleware,
+    _is_probe_request,
+)
 
 
 class TestProbeLoggingFilter:

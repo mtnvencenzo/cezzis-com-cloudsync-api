@@ -3,10 +3,5 @@ kind: Kustomization
 resources:
   - dapr-config.yaml
   - resiliency.yaml
-  - bindings-idp-account-email-sync-queue.yaml
-  - bindings-idp-account-password-sync-queue.yaml
-  - bindings-idp-account-profile-sync-queue.yaml
-  - bindings-zoho-email-dispatch-queue.yaml
-  - pubsub-account-updates-topic.yaml
-  - pubsub-cocktail-user-actions-topic.yaml
-  - statestore-account-avatars.yaml
+  - bindings-cocktail-updates-queue.yaml
+  - pubsub-cocktail-updates-topic.yaml

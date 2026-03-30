@@ -15,6 +15,7 @@ from cezzis_com_cloudsync_api.application.behaviors.error_handling.problem_detai
 from cezzis_com_cloudsync_api.application.concerns.integrations.events.cocktail_updated_event import (
     CocktailUpdatedEvent,
 )
+from cezzis_com_cloudsync_api.domain.config.app_options import AppOptions
 
 logger = logging.getLogger("integrations_router")
 
@@ -22,18 +23,16 @@ logger = logging.getLogger("integrations_router")
 class IntegrationsRouter(APIRouter):
     """API router for Dapr integration binding endpoints."""
 
-    # Dapr binding names matching .dapr configuration
-    BINDING_IDP_ACCOUNT_PROFILE_SYNC = "bindings-idp-account-profile-sync-queue"
-
     @inject
-    def __init__(self, mediator: Mediator) -> None:
-        # No prefix - Dapr calls bindings at root path (e.g., POST /bindings-idp-account-profile-sync-queue)
+    def __init__(self, mediator: Mediator, app_options: AppOptions) -> None:
+        # No prefix - Dapr calls bindings at root path (e.g., POST /bindings-cocktail-updates-queue)
         super().__init__(tags=["Integrations"])
         self.mediator = mediator
 
-        # POST /integrations/idp-account-profile-sync - Sync account profile with identity provider
+        binding_name = app_options.cocktail_update_sync_dapr_input_binding
+
         self.add_api_route(
-            path=f"/{self.BINDING_IDP_ACCOUNT_PROFILE_SYNC}",
+            path=f"/{binding_name}",
             endpoint=self.cocktail_updated_sync,
             methods=["POST"],
             description="Syncs a cocktail updated message into the internal embedding system (Dapr input binding)",
@@ -47,7 +46,7 @@ class IntegrationsRouter(APIRouter):
 
         # OPTIONS endpoints for Dapr binding discovery
         self.add_api_route(
-            path=f"/{self.BINDING_IDP_ACCOUNT_PROFILE_SYNC}",
+            path=f"/{binding_name}",
             endpoint=self._options_handler,
             methods=["OPTIONS"],
             include_in_schema=False,
@@ -62,7 +61,7 @@ class IntegrationsRouter(APIRouter):
         """Sync a cocktail updated message into the internal embedding system.
 
         This endpoint is called by Dapr when a message arrives on the
-        idp-account-profile-sync-queue binding.
+        bindings-cocktail-updates-queue binding.
 
         Args:
             _rq: The FastAPI request object containing the event payload.
@@ -74,9 +73,8 @@ class IntegrationsRouter(APIRouter):
             body: dict[str, Any] = await _rq.json()
             logger.debug("Received cocktail_updated event: %s", body)
 
-            # Extract event data from CloudEvent envelope if present
-            event_data = body.get("data", body)
-            event = CocktailUpdatedEvent(**event_data)
+            # Forward raw message as-is — do not deserialize into typed model
+            event = CocktailUpdatedEvent(raw_payload=body)
             result = await self.mediator.send_async(event)
 
             if result:

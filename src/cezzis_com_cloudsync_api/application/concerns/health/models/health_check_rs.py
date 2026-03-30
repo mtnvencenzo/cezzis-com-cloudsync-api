@@ -16,7 +16,7 @@ class HealthCheckRs(BaseModel):
                 "version": "1.0.0",
                 "output": "API is running",
                 "details": {
-                    "qdrant_database": "healthy",
+                    "dapr": "healthy",
                 },
             }
         }

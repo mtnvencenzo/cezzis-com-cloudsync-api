@@ -66,8 +66,8 @@ def _convert_to_openapi_3_0(schema: dict[str, Any]) -> dict[str, Any]:
 
 def openapi_definition(app: FastAPI, oauth_options: OAuthOptions) -> dict:
     openapi_schema = get_openapi(
-        title="Cezzi's Cocktails Accounts Api",
-        description="An API for managing user accounts in Cezzi's Cocktails application.",
+        title="Cezzi's Cocktails CloudSync Api",
+        description="An API for synchronizing cocktail data changes across Cezzi's platform via Dapr message forwarding.",
         version="1.0.0",
         openapi_version="3.0.1",
         routes=app.routes,
@@ -78,10 +78,7 @@ def openapi_definition(app: FastAPI, oauth_options: OAuthOptions) -> dict:
         client_id=oauth_options.client_id or "",
         domain=oauth_options.domain,
         audience=oauth_options.audience,
-        scopes={
-            "write:owned-account": "Create and update owned account data",
-            "read:owned-account": "Read owned account data",
-        },
+        scopes={},
         pkce=oauth_options.pkce or None,
     )
 
