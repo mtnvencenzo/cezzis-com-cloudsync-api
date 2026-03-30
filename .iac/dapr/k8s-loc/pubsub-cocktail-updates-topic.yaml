@@ -1,0 +1,26 @@
+apiVersion: dapr.io/v1alpha1
+kind: Component
+
+metadata:
+  name: pubsub-cocktail-updates-topic
+
+spec:
+  type: pubsub.kafka
+  version: v1
+  initTimeout: 120s
+  metadata:
+    - name: brokers
+      value: "localhost:30092"
+    - name: authType
+      value: "none"
+    - name: disableTls
+      value: "true"
+    - name: skipVerify
+      value: "false"
+    - name: version
+      value: 1.0.0
+scopes:
+  - cloudsync-api-dapr
+
+auth:
+  secretStore: secret-store

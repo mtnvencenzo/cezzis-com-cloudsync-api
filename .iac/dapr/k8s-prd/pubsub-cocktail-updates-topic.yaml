@@ -1,7 +1,8 @@
 apiVersion: dapr.io/v1alpha1
 kind: Component
+
 metadata:
-  name: pubsub-account-updates-topic
+  name: pubsub-cocktail-updates-topic
   namespace: cezzis
   labels:
     app.kubernetes.io/part-of: cezzis
@@ -9,21 +10,22 @@ metadata:
   annotations:
     argocd.argoproj.io/sync-wave: "200"
 spec:
-  type: pubsub.rabbitmq
+  type: pubsub.kafka
   version: v1
+  initTimeout: 120s
   metadata:
-    - name: exchangeName
-      value: "account-updates-topic"
-    - name: exchangeKind
-      value: "topic"
-    - name: connectionString
+    - name: brokers
       secretKeyRef:
         name: cezzis-com-cloudsync-api-shared-secrets
-        key: RABBITMQ_CONNECTION_STRING
-    - name: durable
+        key: KAFKA_BOOTSTRAP_SERVERS
+    - name: authType
+      value: "none"
+    - name: disableTls
       value: "true"
-    - name: deletedWhenUnused
+    - name: skipVerify
       value: "false"
+    - name: version
+      value: 1.0.0
 scopes:
   - cezzis-com-cloudsync-api
 auth:
