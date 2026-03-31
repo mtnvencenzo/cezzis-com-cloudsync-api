@@ -9,4 +9,4 @@ resources:
 images:
   - name: acrveceusgloshared001.azurecr.io/cezziscomcloudsyncapi
     newName: acrveceusgloshared001.azurecr.io/cezziscomcloudsyncapi
-    newTag: 0.0.1
+    newTag: 0.0.2
