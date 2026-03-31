@@ -39,6 +39,23 @@ class TestCocktailUpdatedEvent:
         assert "creation_date" not in field_names
 
 
+DEADLETTER_PUBSUB = "pubsub-deadletter-topic"
+DEADLETTER_LABEL = "cocktail-updated"
+DEADLETTER_TOPIC = "cocktail-updates-dlx"
+
+
+def _create_app_options() -> MagicMock:
+    """Helper to create a mocked AppOptions with all needed fields."""
+    app_options = MagicMock()
+    app_options.cocktail_update_sync_label = "cocktail-updates"
+    app_options.cocktail_update_sync_dapr_binding = "pubsub-cocktail-updates-topic"
+    app_options.cocktail_update_sync_topic = "cocktail-updates"
+    app_options.cocktail_update_sync_dapr_deadletter_pubsub = DEADLETTER_PUBSUB
+    app_options.cocktail_update_sync_dapr_deadletter_label = DEADLETTER_LABEL
+    app_options.cocktail_update_sync_dapr_deadletter_topic = DEADLETTER_TOPIC
+    return app_options
+
+
 class TestCocktailUpdatedEventCommandHandler:
     """Test cases for CocktailUpdatedEventCommandHandler."""
 
@@ -47,11 +64,7 @@ class TestCocktailUpdatedEventCommandHandler:
         """Test that handle publishes the raw payload via message bus."""
         message_bus = MagicMock()
         message_bus.publish_event_async = AsyncMock()
-
-        app_options = MagicMock()
-        app_options.cocktail_update_sync_label = "cocktail-updates"
-        app_options.cocktail_update_sync_dapr_binding = "pubsub-cocktail-updates-topic"
-        app_options.cocktail_update_sync_topic = "cocktail-updates"
+        app_options = _create_app_options()
 
         handler = CocktailUpdatedEventCommandHandler(
             message_bus=message_bus,
@@ -73,15 +86,40 @@ class TestCocktailUpdatedEventCommandHandler:
         )
 
     @pytest.mark.anyio
-    async def test_handle_propagates_exception(self):
-        """Test that exceptions from message bus propagate."""
+    async def test_handle_publish_failure_dead_letters_and_returns_false(self):
+        """Test that publish failure triggers dead-letter and returns False."""
         message_bus = MagicMock()
-        message_bus.publish_event_async = AsyncMock(side_effect=RuntimeError("publish failed"))
+        message_bus.publish_event_async = AsyncMock(side_effect=[RuntimeError("publish failed"), None])
+        app_options = _create_app_options()
 
-        app_options = MagicMock()
-        app_options.cocktail_update_sync_label = "label"
-        app_options.cocktail_update_sync_dapr_binding = "binding"
-        app_options.cocktail_update_sync_topic = "topic"
+        handler = CocktailUpdatedEventCommandHandler(
+            message_bus=message_bus,
+            app_options=app_options,
+        )
+
+        payload = {"cocktailId": "abc-123"}
+        event = CocktailUpdatedEvent(raw_payload=payload)
+        result = await handler.handle(event)
+
+        assert result is False
+        assert message_bus.publish_event_async.call_count == 2
+
+        # Second call should be the dead-letter publish
+        dlx_call = message_bus.publish_event_async.call_args_list[1]
+        assert dlx_call[1]["config_name"] == DEADLETTER_PUBSUB
+        assert dlx_call[1]["message_label"] == DEADLETTER_LABEL
+        assert dlx_call[1]["topic_name"] == DEADLETTER_TOPIC
+        assert dlx_call[1]["event"] == payload
+        assert dlx_call[1]["raw_payload"] is True
+
+    @pytest.mark.anyio
+    async def test_handle_dead_letter_failure_still_returns_false(self):
+        """Test that if dead-lettering itself fails, handler still returns False without raising."""
+        message_bus = MagicMock()
+        message_bus.publish_event_async = AsyncMock(
+            side_effect=[RuntimeError("publish failed"), RuntimeError("dlx also failed")]
+        )
+        app_options = _create_app_options()
 
         handler = CocktailUpdatedEventCommandHandler(
             message_bus=message_bus,
@@ -89,6 +127,25 @@ class TestCocktailUpdatedEventCommandHandler:
         )
 
         event = CocktailUpdatedEvent(raw_payload={"key": "val"})
+        result = await handler.handle(event)
 
-        with pytest.raises(RuntimeError, match="publish failed"):
-            await handler.handle(event)
+        assert result is False
+        assert message_bus.publish_event_async.call_count == 2
+
+    @pytest.mark.anyio
+    async def test_handle_success_does_not_dead_letter(self):
+        """Test that successful publish does not trigger dead-letter."""
+        message_bus = MagicMock()
+        message_bus.publish_event_async = AsyncMock()
+        app_options = _create_app_options()
+
+        handler = CocktailUpdatedEventCommandHandler(
+            message_bus=message_bus,
+            app_options=app_options,
+        )
+
+        event = CocktailUpdatedEvent(raw_payload={"cocktailId": "abc-123"})
+        result = await handler.handle(event)
+
+        assert result is True
+        message_bus.publish_event_async.assert_called_once()

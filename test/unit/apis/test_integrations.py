@@ -12,8 +12,6 @@ from cezzis_com_cloudsync_api.apis.integrations import IntegrationsRouter
 from cezzis_com_cloudsync_api.application.behaviors.error_handling.exception_types import ForbiddenException
 
 BINDING_NAME = "bindings-cocktail-updates-queue"
-DEADLETTER_PUBSUB = "pubsub-deadletter-topic"
-MESSAGE_LABEL = "cocktail-updated"
 
 
 def _create_router(
@@ -28,10 +26,10 @@ def _create_router(
     if app_options is None:
         app_options = MagicMock()
         app_options.cocktail_update_sync_dapr_input_binding = BINDING_NAME
-        app_options.cocktail_update_sync_label = MESSAGE_LABEL
+        app_options.cocktail_update_sync_label = "cocktail-updated"
         app_options.cocktail_update_sync_dapr_binding = "pubsub-cocktail-updates-topic"
         app_options.cocktail_update_sync_topic = "cocktail-updates"
-        app_options.cocktail_update_sync_dapr_deadletter_pubsub = DEADLETTER_PUBSUB
+        app_options.cocktail_update_sync_dapr_deadletter_pubsub = "pubsub-deadletter-topic"
     if message_bus is None:
         message_bus = MagicMock()
         message_bus.publish_event_async = AsyncMock()
@@ -91,13 +89,11 @@ class TestIntegrationsRouter:
         lambda func: func,
     )
     async def test_cocktail_updated_sync_handler_returns_false(self):
-        """Test that handler returning False dead-letters and returns 200."""
+        """Test that handler returning False still returns 200 (ack)."""
         mediator = MagicMock()
         mediator.send_async = AsyncMock(return_value=False)
-        message_bus = MagicMock()
-        message_bus.publish_event_async = AsyncMock()
 
-        router = _create_router(mediator=mediator, message_bus=message_bus)
+        router = _create_router(mediator=mediator)
         app = _create_app(router)
 
         async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
@@ -108,10 +104,6 @@ class TestIntegrationsRouter:
 
         assert response.status_code == status.HTTP_200_OK
         assert response.json() == {}
-        message_bus.publish_event_async.assert_called_once()
-        call_kwargs = message_bus.publish_event_async.call_args[1]
-        assert call_kwargs["config_name"] == DEADLETTER_PUBSUB
-        assert call_kwargs["event"] == {"cocktailId": "abc-123"}
 
     @pytest.mark.anyio
     @patch(
@@ -119,13 +111,11 @@ class TestIntegrationsRouter:
         lambda func: func,
     )
     async def test_cocktail_updated_sync_handler_raises_value_error(self):
-        """Test that a ValueError dead-letters and returns 200."""
+        """Test that a ValueError still returns 200 (ack)."""
         mediator = MagicMock()
         mediator.send_async = AsyncMock(side_effect=ValueError("bad data"))
-        message_bus = MagicMock()
-        message_bus.publish_event_async = AsyncMock()
 
-        router = _create_router(mediator=mediator, message_bus=message_bus)
+        router = _create_router(mediator=mediator)
         app = _create_app(router)
 
         async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
@@ -136,9 +126,6 @@ class TestIntegrationsRouter:
 
         assert response.status_code == status.HTTP_200_OK
         assert response.json() == {}
-        message_bus.publish_event_async.assert_called_once()
-        call_kwargs = message_bus.publish_event_async.call_args[1]
-        assert call_kwargs["config_name"] == DEADLETTER_PUBSUB
 
     @pytest.mark.anyio
     @patch(
@@ -146,13 +133,11 @@ class TestIntegrationsRouter:
         lambda func: func,
     )
     async def test_cocktail_updated_sync_handler_raises_unexpected(self):
-        """Test that an unexpected exception dead-letters and returns 200."""
+        """Test that an unexpected exception still returns 200 (ack)."""
         mediator = MagicMock()
         mediator.send_async = AsyncMock(side_effect=RuntimeError("boom"))
-        message_bus = MagicMock()
-        message_bus.publish_event_async = AsyncMock()
 
-        router = _create_router(mediator=mediator, message_bus=message_bus)
+        router = _create_router(mediator=mediator)
         app = _create_app(router)
 
         async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
@@ -163,9 +148,6 @@ class TestIntegrationsRouter:
 
         assert response.status_code == status.HTTP_200_OK
         assert response.json() == {}
-        message_bus.publish_event_async.assert_called_once()
-        call_kwargs = message_bus.publish_event_async.call_args[1]
-        assert call_kwargs["config_name"] == DEADLETTER_PUBSUB
 
     @pytest.mark.anyio
     @patch(
@@ -205,32 +187,8 @@ class TestIntegrationsRouter:
         "cezzis_com_cloudsync_api.apis.integrations.dapr_app_token_authorization",
         lambda func: func,
     )
-    async def test_cocktail_updated_sync_dead_letter_failure_still_returns_200(self):
-        """Test that if dead-lettering itself fails, the endpoint still returns 200 (ack)."""
-        mediator = MagicMock()
-        mediator.send_async = AsyncMock(side_effect=RuntimeError("processing failed"))
-        message_bus = MagicMock()
-        message_bus.publish_event_async = AsyncMock(side_effect=RuntimeError("dlx publish failed"))
-
-        router = _create_router(mediator=mediator, message_bus=message_bus)
-        app = _create_app(router)
-
-        async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
-            response = await client.post(
-                f"/{BINDING_NAME}",
-                json={"cocktailId": "abc-123"},
-            )
-
-        assert response.status_code == status.HTTP_200_OK
-        assert response.json() == {}
-
-    @pytest.mark.anyio
-    @patch(
-        "cezzis_com_cloudsync_api.apis.integrations.dapr_app_token_authorization",
-        lambda func: func,
-    )
-    async def test_cocktail_updated_sync_success_does_not_dead_letter(self):
-        """Test that a successful processing does not publish to dead-letter."""
+    async def test_cocktail_updated_sync_success_does_not_call_message_bus(self):
+        """Test that a successful processing does not call message bus from the router."""
         mediator = MagicMock()
         mediator.send_async = AsyncMock(return_value=True)
         message_bus = MagicMock()
@@ -247,26 +205,3 @@ class TestIntegrationsRouter:
 
         assert response.status_code == status.HTTP_200_OK
         message_bus.publish_event_async.assert_not_called()
-
-    @pytest.mark.anyio
-    @patch(
-        "cezzis_com_cloudsync_api.apis.integrations.dapr_app_token_authorization",
-        lambda func: func,
-    )
-    async def test_cocktail_updated_sync_dead_letter_uses_routing_key(self):
-        """Test that dead-lettered messages use the message label as routing key."""
-        mediator = MagicMock()
-        mediator.send_async = AsyncMock(return_value=False)
-        message_bus = MagicMock()
-        message_bus.publish_event_async = AsyncMock()
-
-        router = _create_router(mediator=mediator, message_bus=message_bus)
-        app = _create_app(router)
-
-        async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
-            await client.post(f"/{BINDING_NAME}", json={"cocktailId": "abc-123"})
-
-        call_kwargs = message_bus.publish_event_async.call_args[1]
-        assert call_kwargs["message_label"] == MESSAGE_LABEL
-        assert call_kwargs["topic_name"] == MESSAGE_LABEL
-        assert call_kwargs["raw_payload"] is True
