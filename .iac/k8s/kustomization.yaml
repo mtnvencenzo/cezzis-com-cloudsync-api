@@ -8,5 +8,4 @@ resources:
   - service.yml
 images:
   - name: acrveceusgloshared001.azurecr.io/cezziscomcloudsyncapi
-    newTag: 0.0.31
     newName: acrveceusgloshared001.azurecr.io/cezziscomcloudsyncapi
