@@ -39,7 +39,7 @@ class TestCocktailUpdatedEvent:
         assert "creation_date" not in field_names
 
 
-DEADLETTER_PUBSUB = "pubsub-deadletter-topic"
+DEADLETTER_PUBSUB = "pubsub-sync-deadletter-topic"
 DEADLETTER_LABEL = "cocktail-updated"
 DEADLETTER_TOPIC = "cocktail-updates-dlx"
 

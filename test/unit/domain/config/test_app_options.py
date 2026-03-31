@@ -34,7 +34,7 @@ class TestAppOptions:
                 "CLOUDSYNC_API_COCKTAIL_UPDATE_SYNC_LABEL": "cocktail-update-label",
                 "CLOUDSYNC_API_COCKTAIL_UPDATE_SYNC_DAPR_BINDING": "cocktail-update-binding",
                 "CLOUDSYNC_API_COCKTAIL_UPDATE_SYNC_DAPR_INPUT_BINDING": "bindings-cocktail-updates-queue",
-                "CLOUDSYNC_API_COCKTAIL_UPDATE_SYNC_DAPR_DEADLETTER_PUBSUB": "pubsub-deadletter-topic",
+                "CLOUDSYNC_API_COCKTAIL_UPDATE_SYNC_DAPR_DEADLETTER_PUBSUB": "pubsub-sync-deadletter-topic",
             },
         ):
             options = AppOptions()
@@ -44,7 +44,7 @@ class TestAppOptions:
             assert options.cocktail_update_sync_label == "cocktail-update-label"
             assert options.cocktail_update_sync_dapr_binding == "cocktail-update-binding"
             assert options.cocktail_update_sync_dapr_input_binding == "bindings-cocktail-updates-queue"
-            assert options.cocktail_update_sync_dapr_deadletter_pubsub == "pubsub-deadletter-topic"
+            assert options.cocktail_update_sync_dapr_deadletter_pubsub == "pubsub-sync-deadletter-topic"
 
     def test_get_app_options_singleton(self):
         """Test that get_app_options returns a singleton instance."""
