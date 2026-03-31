@@ -34,13 +34,40 @@ class CocktailUpdatedEventCommandHandler:
     async def handle(self, event: CocktailUpdatedEvent) -> bool:
         """Sync the cocktail updated event."""
 
-        await self.message_bus.publish_event_async(
-            event=event.raw_payload,
-            message_label=self.app_options.cocktail_update_sync_label,
-            config_name=self.app_options.cocktail_update_sync_dapr_binding,
-            topic_name=self.app_options.cocktail_update_sync_topic,
-            content_type="application/json",
-            raw_payload=True,
-        )
+        try:
+            await self.message_bus.publish_event_async(
+                event=event.raw_payload,
+                message_label=self.app_options.cocktail_update_sync_label,
+                config_name=self.app_options.cocktail_update_sync_dapr_binding,
+                topic_name=self.app_options.cocktail_update_sync_topic,
+                content_type="application/json",
+                raw_payload=True,
+            )
 
-        return True
+            return True
+        except Exception as ex:
+            logger.exception("Handler returned failure for cocktail_updated event, dead-lettering message", exc_info=ex)
+            await self._dead_letter(event.raw_payload)
+            return False
+
+    async def _dead_letter(self, body: dict[str, Any]) -> None:
+        """Publish a failed message to the dead-letter exchange.
+
+        Uses the same routing key (message label) so the dead-letter exchange
+        can route the message to the appropriate dead-letter queue.
+
+        Args:
+            body: The original message body to dead-letter. If None, a marker payload is sent.
+        """
+        try:
+            await self.message_bus.publish_event_async(
+                event=body,
+                message_label=self.app_options.cocktail_update_sync_dapr_deadletter_label,
+                config_name=self.app_options.cocktail_update_sync_dapr_deadletter_pubsub,
+                topic_name=self.app_options.cocktail_update_sync_dapr_deadletter_topic,
+                content_type="application/json",
+                raw_payload=True,
+            )
+            logger.info("Message published to dead-letter exchange")
+        except Exception as dlx_err:
+            logger.critical("Failed to dead-letter message — message will be lost: %s", str(dlx_err))

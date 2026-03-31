@@ -35,7 +35,7 @@ src/cezzis_com_cloudsync_api/
 ## API Endpoints
 
 ### Integration
-- **POST** `/v1/integrations/cocktails/updates` — Dapr input binding endpoint that receives cocktail update events and forwards them to Kafka
+- **POST** `/{binding-name}` — Dapr input binding endpoint that receives cocktail update events and forwards them to Kafka
 
 ### Health
 - **GET** `/v1/liveness` — Liveness probe
@@ -106,7 +106,7 @@ poetry run pytest --cov=src/cezzis_com_cloudsync_api --cov-report=html
 ## Technology Stack
 
 - **FastAPI** — Web framework
-- **Dapr** — Distributed runtime (input bindings, pub/sub)
+- **Dapr** — Distributed runtime (input binding, pub/sub)
 - **Pydantic** — Data validation and settings management
 - **OAuth 2.0** — Authentication and authorization (via `cezzis-oauth`)
 - **OpenTelemetry** — Distributed tracing and observability

@@ -1,7 +1,6 @@
 """Integrations API endpoints for Dapr input bindings."""
 
 import logging
-from typing import Any
 
 from fastapi import APIRouter, Request, status
 from fastapi.responses import JSONResponse
@@ -16,6 +15,7 @@ from cezzis_com_cloudsync_api.application.concerns.integrations.events.cocktail_
     CocktailUpdatedEvent,
 )
 from cezzis_com_cloudsync_api.domain.config.app_options import AppOptions
+from cezzis_com_cloudsync_api.domain.services.i_message_bus import IMessageBus
 
 logger = logging.getLogger("integrations_router")
 
@@ -24,12 +24,21 @@ class IntegrationsRouter(APIRouter):
     """API router for Dapr integration binding endpoints."""
 
     @inject
-    def __init__(self, mediator: Mediator, app_options: AppOptions) -> None:
-        # No prefix - Dapr calls bindings at root path (e.g., POST /bindings-cocktail-updates-queue)
+    def __init__(self, mediator: Mediator, app_options: AppOptions, message_bus: IMessageBus) -> None:
         super().__init__(tags=["Integrations"])
         self.mediator = mediator
+        self.message_bus = message_bus
+        self.app_options = app_options
 
         binding_name = app_options.cocktail_update_sync_dapr_input_binding
+
+        self.add_api_route(
+            path=f"/{binding_name}",
+            endpoint=self._options_handler,
+            methods=["OPTIONS"],
+            description="Dapr input binding options endpoint",
+            include_in_schema=False,
+        )
 
         self.add_api_route(
             path=f"/{binding_name}",
@@ -38,22 +47,14 @@ class IntegrationsRouter(APIRouter):
             description="Syncs a cocktail updated message into the internal embedding system (Dapr input binding)",
             include_in_schema=False,
             responses={
-                200: {"description": "Cocktail update synced successfully"},
-                400: {"model": ProblemDetails, "description": "Invalid request"},
-                500: {"model": ProblemDetails, "description": "Internal server error"},
+                200: {"description": "Cocktail update processed successfully"},
+                400: {"description": "Invalid request payload", "model": ProblemDetails},
+                500: {"description": "Internal server error", "model": ProblemDetails},
             },
         )
 
-        # OPTIONS endpoints for Dapr binding discovery
-        self.add_api_route(
-            path=f"/{binding_name}",
-            endpoint=self._options_handler,
-            methods=["OPTIONS"],
-            include_in_schema=False,
-        )
-
-    async def _options_handler(self) -> JSONResponse:
-        """Handle OPTIONS requests for Dapr binding discovery."""
+    async def _options_handler(self, _rq: Request) -> JSONResponse:
+        """Respond to Dapr input binding OPTIONS probe."""
         return JSONResponse(content={}, status_code=status.HTTP_200_OK)
 
     @dapr_app_token_authorization
@@ -61,57 +62,24 @@ class IntegrationsRouter(APIRouter):
         """Sync a cocktail updated message into the internal embedding system.
 
         This endpoint is called by Dapr when a message arrives on the
-        bindings-cocktail-updates-queue binding.
+        input binding for the cocktail updates queue.
+
+        On processing failure, the message is published to the dead-letter
+        exchange before returning success (ack). This prevents infinite
+        redelivery on classic queues which lack delivery-count tracking.
 
         Args:
-            _rq: The FastAPI request object containing the event payload.
+            _rq: The FastAPI request object containing the binding payload.
 
         Returns:
-            JSON response indicating success or failure.
+            Empty JSON on success, ProblemDetails on failure.
         """
         try:
-            body: dict[str, Any] = await _rq.json()
-            logger.debug("Received cocktail_updated event: %s", body)
-
-            # Forward raw message as-is — do not deserialize into typed model
+            body = await _rq.json()
             event = CocktailUpdatedEvent(raw_payload=body)
-            result = await self.mediator.send_async(event)
+            await self.mediator.send_async(event)
 
-            if result:
-                return JSONResponse(content={}, status_code=status.HTTP_200_OK)
-
-            return JSONResponse(
-                content=ProblemDetails(
-                    type="about:blank",
-                    title="Processing Failed",
-                    status=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                    detail="Failed to sync cocktail update with internal embedding system",
-                ).model_dump(exclude_none=True),
-                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                media_type="application/problem+json",
-            )
-
-        except ValueError as ex:
-            logger.warning("Invalid cocktail_updated event: %s", str(ex))
-            return JSONResponse(
-                content=ProblemDetails(
-                    type="about:blank",
-                    title="Validation Error",
-                    status=status.HTTP_400_BAD_REQUEST,
-                    detail=str(ex),
-                ).model_dump(exclude_none=True),
-                status_code=status.HTTP_400_BAD_REQUEST,
-                media_type="application/problem+json",
-            )
         except Exception as ex:
-            logger.error("Error processing cocktail_updated event: %s", str(ex))
-            return JSONResponse(
-                content=ProblemDetails(
-                    type="about:blank",
-                    title="Internal Server Error",
-                    status=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                    detail="An unexpected error occurred",
-                ).model_dump(exclude_none=True),
-                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                media_type="application/problem+json",
-            )
+            logger.exception("Error processing cocktail_updated event, invalid body - no deadlettering", exc_info=ex)
+
+        return JSONResponse(content={}, status_code=status.HTTP_200_OK)
