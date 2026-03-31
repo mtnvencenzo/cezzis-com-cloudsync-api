@@ -1,0 +1,8 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - dapr-config.yaml
+  - resiliency.yaml
+  - bindings-cocktail-updates-queue.yaml
+  - pubsub-deadletter-topic.yaml
+  - pubsub-cocktail-updates-topic.yaml

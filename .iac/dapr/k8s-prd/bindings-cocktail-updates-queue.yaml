@@ -1,0 +1,30 @@
+apiVersion: dapr.io/v1alpha1
+kind: Component
+metadata:
+  name: bindings-cocktail-updates-queue
+  namespace: cezzis
+  labels:
+    app.kubernetes.io/part-of: cezzis
+    app.kubernetes.io/managed-by: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "200"
+spec:
+  type: bindings.rabbitmq
+  version: v1
+  metadata:
+    - name: queueName
+      value: "cocktail-updates-queue"
+    - name: host
+      secretKeyRef:
+        name: cezzis-com-cloudsync-api-shared-secrets
+        key: RABBITMQ_CONNECTION_STRING
+    - name: durable
+      value: "true"
+    - name: deletedWhenUnused
+      value: "false"
+    - name: direction
+      value: "input"
+scopes:
+  - cezzis-com-cloudsync-api
+auth:
+  secretStore: kubernetes

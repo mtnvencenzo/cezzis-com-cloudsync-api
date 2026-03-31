@@ -1,0 +1,79 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cezzis-com-cloudsync-api
+  namespace: cezzis
+  labels:
+    app: cezzis-com-cloudsync-api
+    app.kubernetes.io/part-of: cezzis
+    app.kubernetes.io/managed-by: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "400"
+spec:
+  replicas: 1
+  revisionHistoryLimit: 2
+  selector:
+    matchLabels:
+      app: cezzis-com-cloudsync-api
+  template:
+    metadata:
+      labels:
+        app: cezzis-com-cloudsync-api
+        app.kubernetes.io/part-of: cezzis
+        app.kubernetes.io/managed-by: argocd
+      annotations:
+        dapr.io/enabled: "true"
+        dapr.io/app-id: "cezzis-com-cloudsync-api"
+        dapr.io/app-port: "8018"
+        dapr.io/app-protocol: "http"
+        dapr.io/log-level: "info"
+        dapr.io/config: "cloudsync-api-dapr-config"
+        dapr.io/api-token-secret: "cezzis-shared-daprio-dapr-api-token"
+        dapr.io/app-token-secret: "cezzis-shared-daprio-app-api-token"
+        dapr.io/enable-native-sidecar: "true"
+    spec:
+      imagePullSecrets:
+        - name: acr-pull-secret
+      containers:
+        - name: cezzis-com-cloudsync-api
+          image: acrveceusgloshared001.azurecr.io/cezziscomcloudsyncapi
+          ports:
+            - containerPort: 8018
+              name: http
+              protocol: TCP
+          envFrom:
+            - configMapRef:
+                name: cezzis-com-cloudsync-api-config
+            - secretRef:
+                name: cezzis-com-cloudsync-api-secrets
+            - secretRef:
+                name: cezzis-com-cloudsync-api-shared-secrets
+          startupProbe:
+            httpGet:
+              path: v1/liveness
+              port: 8018
+            initialDelaySeconds: 5
+            periodSeconds: 3
+            timeoutSeconds: 5
+            failureThreshold: 40
+          readinessProbe:
+            httpGet:
+              path: v1/readiness
+              port: 8018
+            periodSeconds: 15
+            timeoutSeconds: 30
+            failureThreshold: 3
+          livenessProbe:
+            httpGet:
+              path: v1/liveness
+              port: 8018
+            periodSeconds: 15
+            timeoutSeconds: 5
+            failureThreshold: 3
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi

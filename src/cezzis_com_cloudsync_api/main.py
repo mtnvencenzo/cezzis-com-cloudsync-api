@@ -1,0 +1,73 @@
+from fastapi import FastAPI
+from fastapi.exceptions import HTTPException, RequestValidationError
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
+from pydantic import ValidationError
+
+from cezzis_com_cloudsync_api.apis import (
+    HealthCheckRouter,
+    IntegrationsRouter,
+    ScalarDocsRouter,
+)
+from cezzis_com_cloudsync_api.app_module import create_injector
+from cezzis_com_cloudsync_api.application.behaviors import initialize_opentelemetry
+from cezzis_com_cloudsync_api.application.behaviors.error_handling import (
+    generic_exception_handler,
+    http_exception_handler,
+    problem_details_exception_handler,
+    validation_exception_handler,
+)
+from cezzis_com_cloudsync_api.application.behaviors.error_handling.exception_types import ProblemDetailsException
+from cezzis_com_cloudsync_api.application.behaviors.error_handling.problem_details import ProblemDetails
+from cezzis_com_cloudsync_api.application.behaviors.openapi.openapi_definition import openapi_definition
+from cezzis_com_cloudsync_api.application.behaviors.otel.probe_telemetry_filter import (
+    PROBE_PATHS,
+    ProbeTelemetryMiddleware,
+)
+from cezzis_com_cloudsync_api.domain.config.app_options import AppOptions
+from cezzis_com_cloudsync_api.domain.config.oauth_options import OAuthOptions
+
+initialize_opentelemetry()
+injector = create_injector()
+app_options = injector.get(AppOptions)
+oauth_options = injector.get(OAuthOptions)
+
+
+app = FastAPI(
+    responses={
+        "default": {
+            "model": ProblemDetails,  # This ensures the model is added to components/schemas
+            "description": "All non-success responses",
+            "content": {"application/problem+json": {"schema": {"$ref": "#/components/schemas/ProblemDetails"}}},
+        },
+    },
+)
+
+# Ensure ProblemDetails is in the schema components
+app.openapi_schema = None  # Force regeneration if needed
+app.openapi = lambda: openapi_definition(app, oauth_options)
+
+# Register exception handlers for RFC 7807 Problem Details
+app.exception_handler(ProblemDetailsException)(problem_details_exception_handler)
+app.exception_handler(HTTPException)(http_exception_handler)
+app.exception_handler(RequestValidationError)(validation_exception_handler)
+app.exception_handler(ValidationError)(validation_exception_handler)
+app.exception_handler(Exception)(generic_exception_handler)
+
+app.mount("/static", StaticFiles(directory="static"), name="static")
+app.add_middleware(ProbeTelemetryMiddleware)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=app_options.allowed_origins.replace(" ", "").split(",") if app_options.allowed_origins else ["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# Instrument FastAPI for OpenTelemetry tracing, excluding health probe paths
+FastAPIInstrumentor.instrument_app(app, excluded_urls=",".join(PROBE_PATHS))
+
+app.include_router(injector.get(ScalarDocsRouter))
+app.include_router(injector.get(HealthCheckRouter))  # type: ignore
+app.include_router(injector.get(IntegrationsRouter))  # type: ignore

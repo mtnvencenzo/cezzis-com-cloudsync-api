@@ -1,0 +1,12 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - configmap.yml
+  - external-secrets.yml
+  - ../dapr/k8s-prd/
+  - deployment.yml
+  - service.yml
+images:
+  - name: acrveceusgloshared001.azurecr.io/cezziscomcloudsyncapi
+    newTag: 0.0.31
+    newName: acrveceusgloshared001.azurecr.io/cezziscomcloudsyncapi

@@ -1,0 +1,8 @@
+
+
+GET {{host}}/v1/health
+Accept: application/json
+X-Key: {{apimkey}}
+
+###
+
