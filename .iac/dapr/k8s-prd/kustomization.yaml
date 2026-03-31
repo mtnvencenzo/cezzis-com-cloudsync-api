@@ -5,4 +5,4 @@ resources:
   - resiliency.yaml
   - bindings-cocktail-updates-queue.yaml
   - pubsub-deadletter-topic.yaml
-  - pubsub-cocktail-updates-topic.yaml
+  - pubsub-cocktail-updates-sync-topic.yaml

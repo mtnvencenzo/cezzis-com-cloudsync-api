@@ -2,7 +2,7 @@ apiVersion: dapr.io/v1alpha1
 kind: Component
 
 metadata:
-  name: pubsub-cocktail-updates-topic
+  name: pubsub-cocktail-updates-sync-topic
   namespace: cezzis
   labels:
     app.kubernetes.io/part-of: cezzis

@@ -48,7 +48,7 @@ def _create_app_options() -> MagicMock:
     """Helper to create a mocked AppOptions with all needed fields."""
     app_options = MagicMock()
     app_options.cocktail_update_sync_label = "cocktail-updates"
-    app_options.cocktail_update_sync_dapr_binding = "pubsub-cocktail-updates-topic"
+    app_options.cocktail_update_sync_dapr_binding = "pubsub-cocktail-updates-sync-topic"
     app_options.cocktail_update_sync_topic = "cocktail-updates"
     app_options.cocktail_update_sync_dapr_deadletter_pubsub = DEADLETTER_PUBSUB
     app_options.cocktail_update_sync_dapr_deadletter_label = DEADLETTER_LABEL
@@ -79,7 +79,7 @@ class TestCocktailUpdatedEventCommandHandler:
         message_bus.publish_event_async.assert_called_once_with(
             event=payload,
             message_label="cocktail-updates",
-            config_name="pubsub-cocktail-updates-topic",
+            config_name="pubsub-cocktail-updates-sync-topic",
             topic_name="cocktail-updates",
             content_type="application/json",
             raw_payload=True,

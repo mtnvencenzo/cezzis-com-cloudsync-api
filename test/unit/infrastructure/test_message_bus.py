@@ -22,13 +22,13 @@ class TestMessageBus:
         await bus.publish_event_async(
             event=event,
             message_label="cocktail-updates",
-            config_name="pubsub-cocktail-updates-topic",
+            config_name="pubsub-cocktail-updates-sync-topic",
             topic_name="cocktail-updates",
         )
 
         dapr_client.publish_event.assert_called_once()
         call_kwargs = dapr_client.publish_event.call_args[1]
-        assert call_kwargs["pubsub_name"] == "pubsub-cocktail-updates-topic"
+        assert call_kwargs["pubsub_name"] == "pubsub-cocktail-updates-sync-topic"
         assert call_kwargs["topic_name"] == "cocktail-updates"
         assert call_kwargs["data"] == event
 

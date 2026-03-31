@@ -27,7 +27,7 @@ def _create_router(
         app_options = MagicMock()
         app_options.cocktail_update_sync_dapr_input_binding = BINDING_NAME
         app_options.cocktail_update_sync_label = "cocktail-updated"
-        app_options.cocktail_update_sync_dapr_binding = "pubsub-cocktail-updates-topic"
+        app_options.cocktail_update_sync_dapr_binding = "pubsub-cocktail-updates-sync-topic"
         app_options.cocktail_update_sync_topic = "cocktail-updates"
         app_options.cocktail_update_sync_dapr_deadletter_pubsub = "pubsub-deadletter-topic"
     if message_bus is None:
