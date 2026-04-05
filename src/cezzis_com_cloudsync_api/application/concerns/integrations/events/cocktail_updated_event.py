@@ -46,9 +46,14 @@ class CocktailUpdatedEventCommandHandler:
 
             return True
         except Exception as ex:
-            logger.exception("Handler returned failure for cocktail_updated event, dead-lettering message", exc_info=ex)
-            await self._dead_letter(event.raw_payload)
-            return False
+            if self.app_options.cocktail_update_sync_dapr_deadletter_pubsub:
+                logger.exception(
+                    "Handler returned failure for cocktail_updated event, dead-lettering message", exc_info=ex
+                )
+                await self._dead_letter(event.raw_payload)
+                return False
+            else:
+                raise
 
     async def _dead_letter(self, body: dict[str, Any]) -> None:
         """Publish a failed message to the dead-letter exchange.

@@ -80,6 +80,10 @@ class IntegrationsRouter(APIRouter):
             await self.mediator.send_async(event)
 
         except Exception as ex:
-            logger.exception("Error processing cocktail_updated event, invalid body - no deadlettering", exc_info=ex)
+            if not self.app_options.cocktail_update_sync_dapr_deadletter_pubsub:
+                logger.exception("Error processing cocktail_updated event", exc_info=ex)
+                raise
+            else:
+                logger.exception("Error processing cocktail_updated event, invalid body", exc_info=ex)
 
         return JSONResponse(content={}, status_code=status.HTTP_200_OK)

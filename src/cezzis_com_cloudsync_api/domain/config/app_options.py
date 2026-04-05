@@ -60,17 +60,14 @@ def get_app_options() -> AppOptions:
                 "CLOUDSYNC_API_COCKTAIL_UPDATE_SYNC_DAPR_INPUT_BINDING environment variable is not configured"
             )
         if not _app_options.cocktail_update_sync_dapr_deadletter_pubsub:
-            _logger.warning(
-                "CLOUDSYNC_API_COCKTAIL_UPDATE_SYNC_DAPR_DEADLETTER_PUBSUB environment variable is not configured"
-            )
-        if not _app_options.cocktail_update_sync_dapr_deadletter_label:
-            _logger.warning(
-                "CLOUDSYNC_API_COCKTAIL_UPDATE_SYNC_DAPR_DEADLETTER_LABEL environment variable is not configured"
-            )
-        if not _app_options.cocktail_update_sync_dapr_deadletter_topic:
-            _logger.warning(
-                "CLOUDSYNC_API_COCKTAIL_UPDATE_SYNC_DAPR_DEADLETTER_TOPIC environment variable is not configured"
-            )
+            if not _app_options.cocktail_update_sync_dapr_deadletter_label:
+                _logger.warning(
+                    "CLOUDSYNC_API_COCKTAIL_UPDATE_SYNC_DAPR_DEADLETTER_LABEL environment variable is not configured"
+                )
+            if not _app_options.cocktail_update_sync_dapr_deadletter_topic:
+                _logger.warning(
+                    "CLOUDSYNC_API_COCKTAIL_UPDATE_SYNC_DAPR_DEADLETTER_TOPIC environment variable is not configured"
+                )
 
         _logger.info("Application options loaded successfully.")
 
