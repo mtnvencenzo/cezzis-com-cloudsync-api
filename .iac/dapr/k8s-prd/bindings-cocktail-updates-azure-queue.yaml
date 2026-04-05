@@ -20,6 +20,8 @@ spec:
       value: "sbq-vec-eus-prd-cocktails-updates-sync-onprem-001"
     - name: direction
       value: "input"
+    - name: disableEntityManagement
+      value: "true"
 scopes:
   - cezzis-com-cloudsync-api
 auth:
