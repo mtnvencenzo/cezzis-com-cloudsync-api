@@ -4,5 +4,6 @@ resources:
   - dapr-config.yaml
   - resiliency.yaml
   - bindings-cocktail-updates-queue.yaml
+  - bindings-cocktail-updates-azure-queue.yaml
   - pubsub-sync-deadletter-topic.yaml
   - pubsub-cocktail-updates-sync-topic.yaml
