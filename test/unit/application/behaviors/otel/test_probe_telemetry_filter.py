@@ -9,6 +9,7 @@ from starlette.routing import Route
 from starlette.testclient import TestClient
 
 from cezzis_com_cloudsync_api.application.behaviors.otel.probe_telemetry_filter import (
+    ProbeAccessLogFilter,
     ProbeLoggingFilter,
     ProbeTelemetryMiddleware,
     _is_probe_request,
@@ -71,8 +72,8 @@ class TestProbeTelemetryMiddleware:
     def _build_app(self, handler):
         app = Starlette(
             routes=[
-                Route("/v1/liveness", handler),
-                Route("/v1/readiness", handler),
+                Route("/api/v1/health/liveness", handler),
+                Route("/api/v1/health/readiness", handler),
                 Route("/v1/other", handler),
             ]
         )
@@ -88,7 +89,7 @@ class TestProbeTelemetryMiddleware:
             return PlainTextResponse("ok")
 
         client = TestClient(self._build_app(handler))
-        client.get("/v1/liveness")
+        client.get("/api/v1/health/liveness")
         assert captured["is_probe"] is True
 
     def test_probe_path_sets_otel_suppression_flag(self):
@@ -100,7 +101,7 @@ class TestProbeTelemetryMiddleware:
             return PlainTextResponse("ok")
 
         client = TestClient(self._build_app(handler))
-        client.get("/v1/readiness")
+        client.get("/api/v1/health/readiness")
         assert captured["suppressed"] is True
 
     def test_non_probe_path_does_not_set_flags(self):
@@ -124,8 +125,54 @@ class TestProbeTelemetryMiddleware:
             return PlainTextResponse("ok")
 
         client = TestClient(self._build_app(handler))
-        client.get("/v1/liveness")
+        client.get("/api/v1/health/liveness")
 
         # After the request, the outer context should be clean
         assert _is_probe_request.get() is False
         assert get_value(_SUPPRESS_INSTRUMENTATION_KEY) is None
+
+
+class TestProbeAccessLogFilter:
+    """Test cases for ProbeAccessLogFilter."""
+
+    def test_drops_liveness_access_log(self):
+        """Access log entries for liveness probe are suppressed."""
+        filt = ProbeAccessLogFilter()
+        record = logging.LogRecord(
+            "uvicorn.access",
+            logging.INFO,
+            "",
+            0,
+            'INFO:     127.0.0.1:52340 - "GET /api/v1/health/liveness HTTP/1.1" 200',
+            (),
+            None,
+        )
+        assert filt.filter(record) is False
+
+    def test_drops_readiness_access_log(self):
+        """Access log entries for readiness probe are suppressed."""
+        filt = ProbeAccessLogFilter()
+        record = logging.LogRecord(
+            "uvicorn.access",
+            logging.INFO,
+            "",
+            0,
+            'INFO:     127.0.0.1:52340 - "GET /api/v1/health/readiness HTTP/1.1" 200',
+            (),
+            None,
+        )
+        assert filt.filter(record) is False
+
+    def test_allows_non_probe_access_log(self):
+        """Access log entries for non-probe endpoints are allowed through."""
+        filt = ProbeAccessLogFilter()
+        record = logging.LogRecord(
+            "uvicorn.access",
+            logging.INFO,
+            "",
+            0,
+            'INFO:     127.0.0.1:52340 - "GET /api/v1/integrations HTTP/1.1" 200',
+            (),
+            None,
+        )
+        assert filt.filter(record) is True

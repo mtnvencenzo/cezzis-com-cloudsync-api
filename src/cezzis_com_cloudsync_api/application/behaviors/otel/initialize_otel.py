@@ -8,7 +8,10 @@ from cezzis_otel import OTelSettings, initialize_otel, shutdown_otel
 from opentelemetry.instrumentation.httpx import HTTPXClientInstrumentor
 from opentelemetry.instrumentation.requests import RequestsInstrumentor
 
-from cezzis_com_cloudsync_api.application.behaviors.otel.probe_telemetry_filter import ProbeLoggingFilter
+from cezzis_com_cloudsync_api.application.behaviors.otel.probe_telemetry_filter import (
+    ProbeAccessLogFilter,
+    ProbeLoggingFilter,
+)
 from cezzis_com_cloudsync_api.domain.config import get_otel_options
 
 
@@ -56,6 +59,10 @@ def initialize_opentelemetry() -> None:
     probe_filter = ProbeLoggingFilter()
     for handler in logging.getLogger().handlers:
         handler.addFilter(probe_filter)
+
+    # Add ProbeAccessLogFilter to suppress uvicorn access log entries for probe endpoints
+    access_log_filter = ProbeAccessLogFilter()
+    logging.getLogger("uvicorn.access").addFilter(access_log_filter)
 
     logger = logging.getLogger("initialize_otel")
     logger.info("OpenTelemetry initialized successfully")

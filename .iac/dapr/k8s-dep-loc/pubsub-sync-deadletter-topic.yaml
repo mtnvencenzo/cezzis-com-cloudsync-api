@@ -1,12 +1,17 @@
 apiVersion: dapr.io/v1alpha1
 kind: Component
-
 metadata:
   name: pubsub-sync-deadletter-topic
-
+  namespace: cezzis
+  labels:
+    app.kubernetes.io/part-of: cezzis
+    app.kubernetes.io/managed-by: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "200"
 spec:
   type: pubsub.rabbitmq
   version: v1
+  initTimeout: 120s
   metadata:
     - name: exchangeName
       value: "deadletter-topic"
@@ -14,13 +19,13 @@ spec:
       value: "topic"
     - name: connectionString
       secretKeyRef:
-        name: rabbitmq_connectionstring
+        name: cezzis-com-cloudsync-api-shared-secrets
+        key: RABBITMQ_CONNECTION_STRING
     - name: durable
       value: "true"
     - name: deletedWhenUnused
       value: "false"
 scopes:
-  - cloudsync-api-dapr
-
+  - cezzis-com-cloudsync-api
 auth:
-  secretStore: secret-store
+  secretStore: kubernetes

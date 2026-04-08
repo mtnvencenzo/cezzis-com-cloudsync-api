@@ -38,8 +38,8 @@ src/cezzis_com_cloudsync_api/
 - **POST** `/{binding-name}` — Dapr input binding endpoint that receives cocktail update events and forwards them to Kafka
 
 ### Health
-- **GET** `/v1/liveness` — Liveness probe
-- **GET** `/v1/readiness` — Readiness probe (checks Dapr sidecar connectivity)
+- **GET** `/api/v1/health/liveness` — Liveness probe
+- **GET** `/api/v1/health/readiness` — Readiness probe (checks Dapr sidecar connectivity)
 
 ## Getting Started
 
@@ -131,5 +131,39 @@ poetry run pytest --cov=src/cezzis_com_cloudsync_api --cov-report=html
 - `.iac/` — Infrastructure as Code (K8s manifests, Dapr components)
 
 ## License
+
+### Deploy
+
+#### CloudSync
+``` shell
+# app
+kubectl apply -f https://raw.githubusercontent.com/mtnvencenzo/cezzis-com-coudsync-api/refs/heads/main/.iac/argocd/cezzis-com-cloudsync-api-cloudsync.yaml
+
+# image updater
+kubectl apply -f https://raw.githubusercontent.com/mtnvencenzo/cezzis-com-coudsync-api/refs/heads/main/.iac/argocd/image-updater-cloudsync.yaml
+```
+
+### Remove 
+``` shell
+kubectl delete -f https://raw.githubusercontent.com/mtnvencenzo/cezzis-com-cloudsync-api/refs/heads/main/.iac/argocd/cezzis-com-cloudsync-api-cloudsync.yaml
+
+kubectl delete -f https://raw.githubusercontent.com/mtnvencenzo/cezzis-com-cloudsync-api/refs/heads/main/.iac/argocd/image-updater-cloudsync.yaml
+```
+
+#### Loc
+``` shell
+# app
+kubectl apply -f https://raw.githubusercontent.com/mtnvencenzo/cezzis-com-cloudsync-api/refs/heads/main/.iac/argocd/cezzis-com-cloudsync-api-loc.yaml
+
+# image updater
+kubectl apply -f https://raw.githubusercontent.com/mtnvencenzo/cezzis-com-cloudsync-api/refs/heads/main/.iac/argocd/image-updater-loc.yaml
+```
+
+### Remove 
+``` shell
+kubectl delete -f https://raw.githubusercontent.com/mtnvencenzo/cezzis-com-cloudsync-api/refs/heads/main/.iac/argocd/cezzis-com-cloudsync-api-loc.yaml
+
+kubectl delete -f https://raw.githubusercontent.com/mtnvencenzo/cezzis-com-cloudsync-api/refs/heads/main/.iac/argocd/image-updater-loc.yaml
+```
 
 This project is licensed under the MIT License.

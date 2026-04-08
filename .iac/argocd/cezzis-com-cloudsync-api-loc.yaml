@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: cezzis-com-cloudsync-api
+  name: cezzis-com-cloudsync-api-loc
   namespace: argocd
   labels:
     app.kubernetes.io/part-of: cezzis
@@ -10,7 +10,7 @@ spec:
   source:
     repoURL: 'https://github.com/mtnvencenzo/cezzis-com-cloudsync-api.git'
     targetRevision: main
-    path: .iac/k8s
+    path: .iac/k8s-loc
   destination:
     server: 'https://kubernetes.default.svc'
     namespace: cezzis

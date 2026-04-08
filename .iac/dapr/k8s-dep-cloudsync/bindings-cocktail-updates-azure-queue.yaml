@@ -14,7 +14,7 @@ spec:
   metadata:
     - name: connectionString
       secretKeyRef:
-        name: cezzis-com-cloudsync-api-secrets
+        name: cezzis-com-cloudsync-api-cloudsync-secrets
         key: AZURE_SB_COCKTAIL_UPDATES_QUEUE_CONNECTION_STRING
     - name: queueName
       value: "sbq-vec-eus-prd-cocktails-updates-sync-onprem-001"
@@ -23,6 +23,6 @@ spec:
     - name: disableEntityManagement
       value: "true"
 scopes:
-  - cezzis-com-cloudsync-api
+  - cezzis-com-cloudsync-api-cloudsync
 auth:
   secretStore: kubernetes

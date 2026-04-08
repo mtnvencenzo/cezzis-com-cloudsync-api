@@ -3,10 +3,10 @@ kind: Kustomization
 resources:
   - configmap.yml
   - external-secrets.yml
-  - ../dapr/k8s-prd/
-  - deployment.yml
   - service.yml
+  - ../dapr/k8s-dep-cloudsync
+  - deployment.yml
 images:
   - name: acrveceusgloshared001.azurecr.io/cezziscomcloudsyncapi
+    newTag: 0.0.1
     newName: acrveceusgloshared001.azurecr.io/cezziscomcloudsyncapi
-    newTag: 0.0.4

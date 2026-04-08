@@ -1,15 +1,22 @@
 apiVersion: dapr.io/v1alpha1
 kind: Component
-
 metadata:
   name: pubsub-cocktail-updates-sync-topic
-
+  namespace: cezzis
+  labels:
+    app.kubernetes.io/part-of: cezzis
+    app.kubernetes.io/managed-by: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "200"
 spec:
   type: pubsub.kafka
   version: v1
+  initTimeout: 120s
   metadata:
     - name: brokers
-      value: "localhost:9092"
+      secretKeyRef:
+        name: cezzis-com-cloudsync-api-shared-secrets
+        key: KAFKA_BOOTSTRAP_SERVERS
     - name: authType
       value: "none"
     - name: disableTls
@@ -19,7 +26,6 @@ spec:
     - name: version
       value: 1.0.0
 scopes:
-  - cloudsync-api-dapr
-
+  - cezzis-com-cloudsync-api
 auth:
-  secretStore: secret-store
+  secretStore: kubernetes

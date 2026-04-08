@@ -1,6 +1,6 @@
 
 
-GET {{host}}/v1/health
+GET {{host}}/api/v1/health/liveness
 Accept: application/json
 X-Key: {{apimkey}}
 

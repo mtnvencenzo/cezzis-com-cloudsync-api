@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: cezzis-com-cloudsync-api-config
+  name: cezzis-com-cloudsync-api-cloudsync-config
   namespace: cezzis
   labels:
     app.kubernetes.io/part-of: cezzis
@@ -11,19 +11,16 @@ metadata:
 data:
   ENV: "prd"
   CLOUDSYNC_API_ALLOWED_ORIGINS: ""
-  CLOUDSYNC_API_COCKTAIL_UPDATE_SYNC_TOPIC: "cocktails-update-topic-prd"
+  CLOUDSYNC_API_COCKTAIL_UPDATE_SYNC_TOPIC: "cocktails-update-topic-cloudsync"
   CLOUDSYNC_API_COCKTAIL_UPDATE_SYNC_LABEL: "cocktail-data-updated"
   CLOUDSYNC_API_COCKTAIL_UPDATE_SYNC_DAPR_BINDING: "pubsub-cocktail-updates-sync-topic"
   CLOUDSYNC_API_COCKTAIL_UPDATE_SYNC_DAPR_INPUT_BINDING: "bindings-cocktail-updates-azure-queue"
-  # CLOUDSYNC_API_COCKTAIL_UPDATE_SYNC_DAPR_DEADLETTER_PUBSUB: "pubsub-sync-deadletter-topic"
-  # CLOUDSYNC_API_COCKTAIL_UPDATE_SYNC_DAPR_DEADLETTER_LABEL: "cocktail.data.updated"
-  # CLOUDSYNC_API_COCKTAIL_UPDATE_SYNC_DAPR_DEADLETTER_TOPIC: "deadletter-topic"
   OAUTH_DOMAIN: "login.cezzis.com"
   OAUTH_AUDIENCE: "https://cezzis-cloudsync-api"
   OAUTH_CLIENT_ID: "HZXyiZxjHgkQqeb6UJxmikCGYpSz5iPb"
   OAUTH_ISSUER: "https://login.cezzis.com/"
   OAUTH_PKCE: ""
   OTEL_EXPORTER_OTLP_ENDPOINT: "http://otel-collector.openobserve-platform.svc.cluster.local:4318"
-  OTEL_SERVICE_NAME: "cezzis-com-cloudsync-api"
+  OTEL_SERVICE_NAME: "cezzis-com-cloudsync-api-cloudsync"
   OTEL_SERVICE_NAMESPACE: "cezzis"
   KAFKA_BOOTSTRAP_SERVERS: "kafka-broker-1.kafka-platform.svc.cluster.local:19092"

@@ -15,17 +15,19 @@ class HealthCheckRouter(APIRouter):
         super().__init__()
         self.mediator = mediator
         self.add_api_route(
-            path="/v1/liveness",
+            path="/api/v1/health/liveness",
             endpoint=self.liveness_check,
             methods=["GET"],
+            include_in_schema=False,
             responses={
                 200: {"model": HealthCheckRs, "description": "Successful liveness check"},
             },
         )
         self.add_api_route(
-            path="/v1/readiness",
+            path="/api/v1/health/readiness",
             endpoint=self.readiness_check,
             methods=["GET"],
+            include_in_schema=False,
             responses={
                 200: {"model": HealthCheckRs, "description": "Service is ready"},
                 503: {"model": HealthCheckRs, "description": "Service is not ready"},

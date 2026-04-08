@@ -1,7 +1,7 @@
 apiVersion: dapr.io/v1alpha1
 kind: Resiliency
 metadata:
-  name: cloudsync-api-dapr-resiliency
+  name: cloudsync-api-cloudsync-dapr-resiliency
   namespace: cezzis
   labels:
     app.kubernetes.io/part-of: cezzis
@@ -23,7 +23,7 @@ spec:
         trip: consecutiveFailures >= 3
   targets:
     components:
-      bindings-cocktail-updates-queue:
+      bindings-cocktail-updates-azure-queue:
         inbound:
           retry: bindingRetry
           circuitBreaker: bindingCircuitBreaker

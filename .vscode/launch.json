@@ -27,33 +27,6 @@
                     "pattern": "Application startup complete.",
                     "uriFormat": "http://localhost:8017/scalar/v1"
                 }
-            },
-            {
-                "name": "Docker Debug: CloudSync API",
-                "type": "debugpy",
-                "request": "launch",
-                "preLaunchTask": "dapr-run-docker",
-                "module": "uvicorn",
-                "args": [
-                    "main:app",
-                    "--reload",
-                    "--port",
-                    "8017"
-                ],
-                "console": "integratedTerminal",
-                "env": {
-                    "ENV": "loc",
-                    "DAPR_HTTP_PORT": "5695",
-                    "DAPR_GRPC_PORT": "54003",
-                    "DAPR_API_TOKEN": "2eae500b-b212-4c6c-90fe-d9d35b7ac1c4",
-                    "APP_API_TOKEN": "a023b707-5781-4e8c-9df0-f1b07cb6a0e1"
-                },
-                "cwd": "${workspaceFolder}/src/cezzis_com_cloudsync_api",
-                "serverReadyAction": {
-                    "action": "openExternally",
-                    "pattern": "Application startup complete.",
-                    "uriFormat": "http://localhost:8017/scalar/v1"
-                }
             }
         ]
     }

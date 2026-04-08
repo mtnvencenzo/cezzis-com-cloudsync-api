@@ -9,7 +9,7 @@ from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.requests import Request
 from starlette.responses import Response
 
-PROBE_PATHS = frozenset({"/v1/liveness", "/v1/readiness"})
+PROBE_PATHS = frozenset({"/api/v1/health/liveness", "/api/v1/health/readiness"})
 
 _is_probe_request: ContextVar[bool] = ContextVar("is_probe_request", default=False)
 
@@ -25,6 +25,17 @@ class ProbeLoggingFilter(logging.Filter):
         if not _is_probe_request.get():
             return True
         return record.levelno >= logging.WARNING
+
+
+class ProbeAccessLogFilter(logging.Filter):
+    """Drops uvicorn access-log entries for health-probe endpoints.
+
+    Matches log records whose message contains any of the PROBE_PATHS.
+    """
+
+    def filter(self, record: logging.LogRecord) -> bool:
+        msg = record.getMessage()
+        return not any(path in msg for path in PROBE_PATHS)
 
 
 class ProbeTelemetryMiddleware(BaseHTTPMiddleware):

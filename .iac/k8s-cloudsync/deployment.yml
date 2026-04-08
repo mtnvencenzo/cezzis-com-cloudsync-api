@@ -1,10 +1,10 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: cezzis-com-cloudsync-api
+  name: cezzis-com-cloudsync-api-cloudsync
   namespace: cezzis
   labels:
-    app: cezzis-com-cloudsync-api
+    app: cezzis-com-cloudsync-api-cloudsync
     app.kubernetes.io/part-of: cezzis
     app.kubernetes.io/managed-by: argocd
   annotations:
@@ -14,20 +14,20 @@ spec:
   revisionHistoryLimit: 2
   selector:
     matchLabels:
-      app: cezzis-com-cloudsync-api
+      app: cezzis-com-cloudsync-api-cloudsync
   template:
     metadata:
       labels:
-        app: cezzis-com-cloudsync-api
+        app: cezzis-com-cloudsync-api-cloudsync
         app.kubernetes.io/part-of: cezzis
         app.kubernetes.io/managed-by: argocd
       annotations:
         dapr.io/enabled: "true"
-        dapr.io/app-id: "cezzis-com-cloudsync-api"
+        dapr.io/app-id: "cezzis-com-cloudsync-api-cloudsync"
         dapr.io/app-port: "8018"
         dapr.io/app-protocol: "http"
         dapr.io/log-level: "info"
-        dapr.io/config: "cloudsync-api-dapr-config"
+        dapr.io/config: "cloudsync-api-cloudsync-dapr-config"
         dapr.io/api-token-secret: "cezzis-shared-daprio-dapr-api-token"
         dapr.io/app-token-secret: "cezzis-shared-daprio-app-api-token"
         dapr.io/enable-native-sidecar: "true"
@@ -35,7 +35,7 @@ spec:
       imagePullSecrets:
         - name: acr-pull-secret
       containers:
-        - name: cezzis-com-cloudsync-api
+        - name: cezzis-com-cloudsync-api-cloudsync
           image: acrveceusgloshared001.azurecr.io/cezziscomcloudsyncapi
           ports:
             - containerPort: 8018
@@ -43,14 +43,14 @@ spec:
               protocol: TCP
           envFrom:
             - configMapRef:
-                name: cezzis-com-cloudsync-api-config
+                name: cezzis-com-cloudsync-api-cloudsync-config
             - secretRef:
-                name: cezzis-com-cloudsync-api-secrets
+                name: cezzis-com-cloudsync-api-cloudsync-secrets
             - secretRef:
-                name: cezzis-com-cloudsync-api-shared-secrets
+                name: cezzis-com-cloudsync-api-cloudsync-shared-secrets
           startupProbe:
             httpGet:
-              path: v1/liveness
+              path: api/v1/health/liveness
               port: 8018
             initialDelaySeconds: 5
             periodSeconds: 3
@@ -58,14 +58,14 @@ spec:
             failureThreshold: 40
           readinessProbe:
             httpGet:
-              path: v1/readiness
+              path: api/v1/health/readiness
               port: 8018
             periodSeconds: 15
             timeoutSeconds: 30
             failureThreshold: 3
           livenessProbe:
             httpGet:
-              path: v1/liveness
+              path: api/v1/health/liveness
               port: 8018
             periodSeconds: 15
             timeoutSeconds: 5
