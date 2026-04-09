@@ -14,6 +14,6 @@ class ScalarDocsRouter(APIRouter):
     async def scalar_html(self):
         return get_scalar_api_reference(
             openapi_url="/openapi.json",
-            scalar_favicon_url="/static/favicon.svg",
+            scalar_favicon_url="https://www.cezzis.com/cdn/cz/cocktails/favicon.svg",
             title="Cezzi's Cocktails CloudSync Api",
         )

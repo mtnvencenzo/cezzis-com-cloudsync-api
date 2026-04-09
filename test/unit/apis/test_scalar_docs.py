@@ -38,6 +38,6 @@ class TestScalarDocsRouter:
         assert result == {"openapi": "3.0.0"}
         mock_get_scalar.assert_called_once_with(
             openapi_url="/openapi.json",
-            scalar_favicon_url="/static/favicon.svg",
+            scalar_favicon_url="https://www.cezzis.com/cdn/cz/cocktails/favicon.svg",
             title="Cezzi's Cocktails CloudSync Api",
         )
