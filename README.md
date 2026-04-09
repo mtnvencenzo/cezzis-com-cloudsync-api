@@ -137,10 +137,10 @@ poetry run pytest --cov=src/cezzis_com_cloudsync_api --cov-report=html
 #### CloudSync
 ``` shell
 # app
-kubectl apply -f https://raw.githubusercontent.com/mtnvencenzo/cezzis-com-coudsync-api/refs/heads/main/.iac/argocd/cezzis-com-cloudsync-api-cloudsync.yaml
+kubectl apply -f https://raw.githubusercontent.com/mtnvencenzo/cezzis-com-cloudsync-api/refs/heads/main/.iac/argocd/cezzis-com-cloudsync-api-cloudsync.yaml
 
 # image updater
-kubectl apply -f https://raw.githubusercontent.com/mtnvencenzo/cezzis-com-coudsync-api/refs/heads/main/.iac/argocd/image-updater-cloudsync.yaml
+kubectl apply -f https://raw.githubusercontent.com/mtnvencenzo/cezzis-com-cloudsync-api/refs/heads/main/.iac/argocd/image-updater-cloudsync.yaml
 ```
 
 ### Remove 
