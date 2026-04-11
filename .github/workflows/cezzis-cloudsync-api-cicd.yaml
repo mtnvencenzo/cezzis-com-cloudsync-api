@@ -4,8 +4,8 @@ on:
   pull_request:
     branches: [main]
     paths-ignore:
-      - '.iac/**'
-      - '.github/**'
+      - '.iac/k8s-cloudsync/kustomization.yaml'
+      - '.iac/k8s-loc/kustomization.yaml'
       - '.vscode/**'
       - '.assets/**'
   push:
