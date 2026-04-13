@@ -33,13 +33,13 @@ jobs:
           fetch-depth: 0
       
       - name: Install GetVersion
-        uses: gittools/actions/gitversion/setup@v4.3.3
+        uses: gittools/actions/gitversion/setup@v4.5.0
         with:
           versionSpec: "6.x"
 
       - name: Use GitVersion
         id: gitVersion
-        uses: gittools/actions/gitversion/execute@v4.3.3
+        uses: gittools/actions/gitversion/execute@v4.5.0
         with:
           configFilePath: ./GitVersion.yml
 
