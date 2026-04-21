@@ -23,4 +23,4 @@ data:
   OTEL_EXPORTER_OTLP_ENDPOINT: "http://otel-collector.openobserve-platform.svc.cluster.local:4318"
   OTEL_SERVICE_NAME: "cezzis-com-cloudsync-api-cloudsync"
   OTEL_SERVICE_NAMESPACE: "cezzis"
-  KAFKA_BOOTSTRAP_SERVERS: "kafka-broker-1.kafka-platform.svc.cluster.local:19092"
+  KAFKA_BOOTSTRAP_SERVERS: "kafka-broker-1.kafka-platform.svc.cluster.local:19092,kafka-broker-2.kafka-platform.svc.cluster.local:19093,kafka-broker-3.kafka-platform.svc.cluster.local:19095"
