@@ -12,7 +12,7 @@ spec:
   tracing:
     samplingRate: "1"
     otel:
-      endpointAddress: "otel-collector.openobserve-platform.svc.cluster.local:4317"
+      endpointAddress: "otel-collector.elastic-platform.svc.cluster.local:4317"
       isSecure: false
       protocol: grpc
   logging:
