@@ -31,20 +31,29 @@ class TestDaprClient:
         headers = client._get_headers_callback()
         assert headers == {"dapr-api-token": "my-secret-token"}
 
-    def test_create_client_uses_headers_callback_when_token_set(self):
-        """Test that _create_client passes headers_callback when token is set."""
+    def test_create_client_uses_headers_callback_and_interceptor_when_token_set(self):
+        """Test that _create_client configures both HTTP and gRPC auth when token is set."""
         opts = _make_dapr_options(dapr_api_token="tok")
         client = DaprClient(opts)
 
-        with patch("cezzis_com_cloudsync_api.infrastructure.dapr.dapr_client.OfficialDaprClient") as mock_cls:
-            client._create_client()
+        with patch(
+            "cezzis_com_cloudsync_api.infrastructure.dapr.dapr_client.DaprClientInterceptor"
+        ) as mock_interceptor:
+            with patch("cezzis_com_cloudsync_api.infrastructure.dapr.dapr_client.OfficialDaprClient") as mock_cls:
+                interceptor_instance = MagicMock()
+                mock_interceptor.return_value = interceptor_instance
+
+                client._create_client()
+
+                mock_interceptor.assert_called_once_with([("dapr-api-token", "tok")])
             mock_cls.assert_called_once_with(
                 address="localhost:50001",
                 headers_callback=client._get_headers_callback,
+                interceptors=[interceptor_instance],
             )
 
     def test_create_client_no_headers_callback_when_no_token(self):
-        """Test that _create_client passes headers_callback=None when no token."""
+        """Test that _create_client passes no auth hooks when no token."""
         opts = _make_dapr_options(dapr_api_token="")
         client = DaprClient(opts)
 
@@ -53,6 +62,7 @@ class TestDaprClient:
             mock_cls.assert_called_once_with(
                 address="localhost:50001",
                 headers_callback=None,
+                interceptors=None,
             )
 
     @pytest.mark.anyio

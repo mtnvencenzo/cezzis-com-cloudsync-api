@@ -127,3 +127,19 @@ class TestOpenApiDefinition:
         # Verify app's schema was set
         assert app.openapi_schema is not None
         assert app.openapi_schema == result
+
+    @patch("cezzis_com_cloudsync_api.application.behaviors.openapi.openapi_definition.get_openapi")
+    @patch("cezzis_com_cloudsync_api.application.behaviors.openapi.openapi_definition.generate_openapi_oauth2_scheme")
+    def test_openapi_definition_initializes_missing_components(self, mock_generate_scheme, mock_get_openapi):
+        """Test that openapi_definition initializes components when missing from schema."""
+        app = FastAPI()
+        oauth_options = OAuthOptions(domain="auth.example.com", audience="api://cocktails", client_id="test-client-id")
+
+        mock_get_openapi.return_value = {"openapi": "3.0.0", "info": {"title": "Test", "version": "1.0.0"}}
+        mock_generate_scheme.return_value = {"type": "oauth2"}
+
+        result = openapi_definition(app, oauth_options)
+
+        assert "components" in result
+        assert "securitySchemes" in result["components"]
+        assert result["components"]["securitySchemes"] == {"type": "oauth2"}

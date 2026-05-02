@@ -73,7 +73,8 @@ def openapi_definition(app: FastAPI, oauth_options: OAuthOptions) -> dict:
         routes=app.routes,
     )
 
-    openapi_schema["components"]["securitySchemes"] = generate_openapi_oauth2_scheme(
+    components = openapi_schema.setdefault("components", {})
+    components["securitySchemes"] = generate_openapi_oauth2_scheme(
         name="auth0",
         client_id=oauth_options.client_id or "",
         domain=oauth_options.domain,

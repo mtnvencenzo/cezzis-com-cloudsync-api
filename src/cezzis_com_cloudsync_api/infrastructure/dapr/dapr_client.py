@@ -6,6 +6,13 @@ import logging
 from typing import Any
 
 from dapr.clients import DaprClient as OfficialDaprClient
+from dapr.clients.grpc.interceptors import DaprClientInterceptor
+from grpc import (  # type: ignore
+    StreamStreamClientInterceptor,
+    StreamUnaryClientInterceptor,
+    UnaryStreamClientInterceptor,
+    UnaryUnaryClientInterceptor,
+)
 
 from cezzis_com_cloudsync_api.domain.config.dapr_options import DaprOptions
 
@@ -32,9 +39,22 @@ class DaprClient:
         Returns:
             A configured Dapr client.
         """
+        interceptors: (
+            list[
+                UnaryUnaryClientInterceptor
+                | UnaryStreamClientInterceptor
+                | StreamUnaryClientInterceptor
+                | StreamStreamClientInterceptor
+            ]
+            | None
+        ) = None
+        if self._options.dapr_api_token:
+            interceptors = [DaprClientInterceptor([("dapr-api-token", self._options.dapr_api_token)])]
+
         return OfficialDaprClient(
             address=self._grpc_endpoint,
             headers_callback=self._get_headers_callback if self._options.dapr_api_token else None,
+            interceptors=interceptors,
         )
 
     def _get_headers_callback(self) -> dict[str, str]:
