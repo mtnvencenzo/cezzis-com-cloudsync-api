@@ -33,13 +33,13 @@ jobs:
           fetch-depth: 0
       
       - name: Install GetVersion
-        uses: gittools/actions/gitversion/setup@v4.3.3
+        uses: gittools/actions/gitversion/setup@v4.5.0
         with:
           versionSpec: "6.x"
 
       - name: Use GitVersion
         id: gitVersion
-        uses: gittools/actions/gitversion/execute@v4.3.3
+        uses: gittools/actions/gitversion/execute@v4.5.0
         with:
           configFilePath: ./GitVersion.yml
 
@@ -90,3 +90,25 @@ jobs:
         uses: mtnvencenzo/workflows/.github/actions/create-release@main
         with:
           version: ${{ needs.gitVersion.outputs.semVer }}
+
+  terraform_deploy_prd:
+    name: Terraform deploy prd
+    uses: mtnvencenzo/workflows/.github/workflows/terraform-plan-and-apply.yaml@main
+    needs: [docker, gitVersion]
+    with:
+      lint_only: false
+      working_directory: .iac/terraform
+      environment_name: prd
+      allow_deploy: ${{ (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && github.ref_name == 'main' }}
+      terraform_version: 1.11.4
+      arm_client_id: ${{ vars.ARM_CLIENT_ID }}
+      arm_subscription_id: ${{ vars.ARM_SUBSCRIPTION_ID }}
+      arm_tenant_id: ${{ vars.ARM_TENANT_ID }}
+      backend_resource_group_name: rg-vec-eus-administration-001
+      backend_storage_account_name: stveceusterraformstat001
+      backend_container_name: terraform-cocktails
+      backend_blob_key: cocktails/prd-cloudsync-api.tfstate
+      command_line_args: ''
+    secrets:
+      arm_client_secret: ${{ secrets.ARM_CLIENT_SECRET }}
+      terraform_module_repo_access_key_secret: ${{ secrets.TERRAFORM_MODULE_REPO_ACCESS_KEY_SECRET }}

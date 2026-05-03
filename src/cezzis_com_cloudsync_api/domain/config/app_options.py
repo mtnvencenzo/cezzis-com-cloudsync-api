@@ -21,11 +21,17 @@ class AppOptions(BaseSettings):
     cocktail_update_sync_dapr_input_binding: str = Field(
         default="", validation_alias="CLOUDSYNC_API_COCKTAIL_UPDATE_SYNC_DAPR_INPUT_BINDING"
     )
+    cocktail_update_sync_scheduled_dapr_input_binding: str = Field(
+        default="", validation_alias="CLOUDSYNC_API_COCKTAIL_UPDATE_SYNC_SCHEDULED_DAPR_INPUT_BINDING"
+    )
     cocktail_update_sync_dapr_deadletter_pubsub: str = Field(
         default="", validation_alias="CLOUDSYNC_API_COCKTAIL_UPDATE_SYNC_DAPR_DEADLETTER_PUBSUB"
     )
     cocktail_update_sync_dapr_deadletter_label: str = Field(
         default="", validation_alias="CLOUDSYNC_API_COCKTAIL_UPDATE_SYNC_DAPR_DEADLETTER_LABEL"
+    )
+    cocktail_update_sync_scheduled_dapr_deadletter_label: str = Field(
+        default="", validation_alias="CLOUDSYNC_API_COCKTAIL_UPDATE_SYNC_SCHEDULED_DAPR_DEADLETTER_LABEL"
     )
     cocktail_update_sync_dapr_deadletter_topic: str = Field(
         default="", validation_alias="CLOUDSYNC_API_COCKTAIL_UPDATE_SYNC_DAPR_DEADLETTER_TOPIC"
