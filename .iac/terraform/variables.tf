@@ -32,6 +32,11 @@ variable "environment" {
   description = "Environment name, e.g. 'dev' or 'stage' or 'prod'"
 }
 
+variable "cloud_environment" {
+  type        = string
+  description = "Environment name, e.g. 'dev' or 'stage' or 'prod'"
+}
+
 variable "region" {
   type    = string
   default = "eus"
