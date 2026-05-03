@@ -95,6 +95,9 @@ jobs:
     name: Terraform deploy prd
     uses: mtnvencenzo/workflows/.github/workflows/terraform-plan-and-apply.yaml@main
     needs: [docker, gitVersion]
+    permissions:
+      contents: read
+      pull-requests: write
     with:
       lint_only: false
       working_directory: .iac/terraform
