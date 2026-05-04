@@ -65,7 +65,7 @@ class CocktailUpdatedScheduledEventCommandHandler:
         try:
             await self.message_bus.publish_event_async(
                 event=body,
-                message_label=self.app_options.cocktail_update_scheduling_sync_label,
+                message_label=self.app_options.cocktail_update_sync_scheduled_dapr_deadletter_label,
                 config_name=self.app_options.cocktail_update_sync_scheduled_dapr_deadletter_pubsub,
                 topic_name=self.app_options.cocktail_update_sync_scheduled_dapr_deadletter_topic,
                 content_type="application/json",

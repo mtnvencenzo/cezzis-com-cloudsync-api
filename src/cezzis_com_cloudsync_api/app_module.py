@@ -6,7 +6,8 @@ from cezzis_com_cloudsync_api.application.concerns.health.queries.readiness_chec
     ReadinessCheckQueryHandler,
 )
 from cezzis_com_cloudsync_api.application.concerns.integrations.events import (
-    CocktailUpdatedEventCommandHandler,
+    CocktailUpdatedScheduledEventCommandHandler,
+    CocktailUpdatedSchedulingEventCommandHandler,
 )
 from cezzis_com_cloudsync_api.domain.config.app_options import AppOptions, get_app_options
 from cezzis_com_cloudsync_api.domain.config.dapr_options import DaprOptions, get_dapr_options
@@ -42,7 +43,12 @@ class AppModule(Module):
         binder.bind(ReadinessCheckQueryHandler, ReadinessCheckQueryHandler, scope=singleton)
 
         # Integration event handlers
-        binder.bind(CocktailUpdatedEventCommandHandler, CocktailUpdatedEventCommandHandler, scope=singleton)
+        binder.bind(
+            CocktailUpdatedSchedulingEventCommandHandler, CocktailUpdatedSchedulingEventCommandHandler, scope=singleton
+        )
+        binder.bind(
+            CocktailUpdatedScheduledEventCommandHandler, CocktailUpdatedScheduledEventCommandHandler, scope=singleton
+        )
 
     @provider
     @singleton

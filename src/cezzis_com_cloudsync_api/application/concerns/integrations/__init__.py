@@ -3,11 +3,19 @@
 from cezzis_com_cloudsync_api.application.concerns.integrations.events import (
     CocktailUpdatedEvent,
     CocktailUpdatedEventCommandHandler,
+    CocktailUpdatedScheduledEvent,
+    CocktailUpdatedScheduledEventCommandHandler,
+    CocktailUpdatedSchedulingEvent,
+    CocktailUpdatedSchedulingEventCommandHandler,
     IIntegrationEvent,
 )
 
 __all__ = [
     "IIntegrationEvent",
-    "CocktailUpdatedEventCommandHandler",
     "CocktailUpdatedEvent",
+    "CocktailUpdatedEventCommandHandler",
+    "CocktailUpdatedSchedulingEvent",
+    "CocktailUpdatedSchedulingEventCommandHandler",
+    "CocktailUpdatedScheduledEvent",
+    "CocktailUpdatedScheduledEventCommandHandler",
 ]
