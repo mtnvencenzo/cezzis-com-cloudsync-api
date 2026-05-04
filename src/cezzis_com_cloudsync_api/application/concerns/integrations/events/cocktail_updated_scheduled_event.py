@@ -11,8 +11,6 @@ from cezzis_com_cloudsync_api.application.concerns.integrations.events.integrati
 from cezzis_com_cloudsync_api.domain.config.app_options import AppOptions
 from cezzis_com_cloudsync_api.domain.services.i_message_bus import IMessageBus
 
-logger = logging.getLogger("cocktail_updated_scheduled_event")
-
 
 class CocktailUpdatedScheduledEvent(IIntegrationEvent, GenericQuery[bool]):
     """Event triggered when a cocktail is updated and needs to sync with the embedding system."""
@@ -32,7 +30,7 @@ class CocktailUpdatedScheduledEventCommandHandler:
         self.app_options = app_options
 
     async def handle(self, event: CocktailUpdatedScheduledEvent) -> bool:
-        """Sync the cocktail updated event."""
+        """Sync the cocktail updated scheduled event."""
 
         try:
             await self.message_bus.publish_event_async(
@@ -47,7 +45,7 @@ class CocktailUpdatedScheduledEventCommandHandler:
             return True
         except Exception as ex:
             if self.app_options.cocktail_update_sync_dapr_deadletter_pubsub:
-                logger.exception(
+                self.logger.exception(
                     "Handler returned failure for cocktail_updated_scheduled event, dead-lettering message", exc_info=ex
                 )
                 await self._dead_letter(event.raw_payload)
@@ -67,12 +65,12 @@ class CocktailUpdatedScheduledEventCommandHandler:
         try:
             await self.message_bus.publish_event_async(
                 event=body,
-                message_label=self.app_options.cocktail_update_sync_dapr_deadletter_label,
-                config_name=self.app_options.cocktail_update_sync_dapr_deadletter_pubsub,
-                topic_name=self.app_options.cocktail_update_sync_dapr_deadletter_topic,
+                message_label=self.app_options.cocktail_update_scheduling_sync_label,
+                config_name=self.app_options.cocktail_update_sync_scheduled_dapr_deadletter_pubsub,
+                topic_name=self.app_options.cocktail_update_sync_scheduled_dapr_deadletter_topic,
                 content_type="application/json",
                 raw_payload=True,
             )
-            logger.info("Message published to dead-letter exchange")
+            self.logger.info("Message published to dead-letter exchange")
         except Exception as dlx_err:
-            logger.critical("Failed to dead-letter message — message will be lost: %s", str(dlx_err))
+            self.logger.critical("Failed to dead-letter message — message will be lost: %s", str(dlx_err))

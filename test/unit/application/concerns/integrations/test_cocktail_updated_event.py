@@ -4,36 +4,36 @@ from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
-from cezzis_com_cloudsync_api.application.concerns.integrations.events.cocktail_updated_event import (
-    CocktailUpdatedEvent,
-    CocktailUpdatedEventCommandHandler,
+from cezzis_com_cloudsync_api.application.concerns.integrations.events.cocktail_updated_scheduled_event import (
+    CocktailUpdatedScheduledEvent,
+    CocktailUpdatedScheduledEventCommandHandler,
 )
 
 
-class TestCocktailUpdatedEvent:
-    """Test cases for CocktailUpdatedEvent model."""
+class TestCocktailUpdatedScheduledEvent:
+    """Test cases for CocktailUpdatedScheduledEvent model."""
 
     def test_create_with_raw_payload(self):
         """Test creating event with raw payload."""
         payload = {"cocktailId": "abc-123", "action": "updated"}
-        event = CocktailUpdatedEvent(raw_payload=payload)
+        event = CocktailUpdatedScheduledEvent(raw_payload=payload)
         assert event.raw_payload == payload
 
     def test_raw_payload_preserves_nested_data(self):
         """Test that nested structures are preserved."""
         payload = {"data": {"id": 1, "tags": ["a", "b"]}, "meta": {"source": "test"}}
-        event = CocktailUpdatedEvent(raw_payload=payload)
+        event = CocktailUpdatedScheduledEvent(raw_payload=payload)
         assert event.raw_payload == payload
 
     def test_raw_payload_is_required(self):
         """Test that raw_payload is a required field."""
         with pytest.raises(Exception):  # noqa: B017
-            CocktailUpdatedEvent(raw_payload=None)  # type: ignore[arg-type]
+            CocktailUpdatedScheduledEvent(raw_payload=None)  # type: ignore[arg-type]
 
     def test_no_extra_base_fields(self):
         """Test that no wasted base fields (correlation_id, id, creation_date) are generated."""
         payload = {"key": "value"}
-        event = CocktailUpdatedEvent(raw_payload=payload)
+        event = CocktailUpdatedScheduledEvent(raw_payload=payload)
         field_names = set(type(event).model_fields.keys())
         assert "correlation_id" not in field_names
         assert "creation_date" not in field_names
@@ -56,8 +56,8 @@ def _create_app_options() -> MagicMock:
     return app_options
 
 
-class TestCocktailUpdatedEventCommandHandler:
-    """Test cases for CocktailUpdatedEventCommandHandler."""
+class TestCocktailUpdatedScheduledEventCommandHandler:
+    """Test cases for CocktailUpdatedScheduledEventCommandHandler."""
 
     @pytest.mark.anyio
     async def test_handle_publishes_raw_payload(self):
@@ -66,13 +66,13 @@ class TestCocktailUpdatedEventCommandHandler:
         message_bus.publish_event_async = AsyncMock()
         app_options = _create_app_options()
 
-        handler = CocktailUpdatedEventCommandHandler(
+        handler = CocktailUpdatedScheduledEventCommandHandler(
             message_bus=message_bus,
             app_options=app_options,
         )
 
         payload = {"cocktailId": "abc-123", "action": "updated"}
-        event = CocktailUpdatedEvent(raw_payload=payload)
+        event = CocktailUpdatedScheduledEvent(raw_payload=payload)
         result = await handler.handle(event)
 
         assert result is True
@@ -92,13 +92,13 @@ class TestCocktailUpdatedEventCommandHandler:
         message_bus.publish_event_async = AsyncMock(side_effect=[RuntimeError("publish failed"), None])
         app_options = _create_app_options()
 
-        handler = CocktailUpdatedEventCommandHandler(
+        handler = CocktailUpdatedScheduledEventCommandHandler(
             message_bus=message_bus,
             app_options=app_options,
         )
 
         payload = {"cocktailId": "abc-123"}
-        event = CocktailUpdatedEvent(raw_payload=payload)
+        event = CocktailUpdatedScheduledEvent(raw_payload=payload)
         result = await handler.handle(event)
 
         assert result is False
@@ -121,12 +121,12 @@ class TestCocktailUpdatedEventCommandHandler:
         )
         app_options = _create_app_options()
 
-        handler = CocktailUpdatedEventCommandHandler(
+        handler = CocktailUpdatedScheduledEventCommandHandler(
             message_bus=message_bus,
             app_options=app_options,
         )
 
-        event = CocktailUpdatedEvent(raw_payload={"key": "val"})
+        event = CocktailUpdatedScheduledEvent(raw_payload={"key": "val"})
         result = await handler.handle(event)
 
         assert result is False
@@ -139,12 +139,12 @@ class TestCocktailUpdatedEventCommandHandler:
         message_bus.publish_event_async = AsyncMock()
         app_options = _create_app_options()
 
-        handler = CocktailUpdatedEventCommandHandler(
+        handler = CocktailUpdatedScheduledEventCommandHandler(
             message_bus=message_bus,
             app_options=app_options,
         )
 
-        event = CocktailUpdatedEvent(raw_payload={"cocktailId": "abc-123"})
+        event = CocktailUpdatedScheduledEvent(raw_payload={"cocktailId": "abc-123"})
         result = await handler.handle(event)
 
         assert result is True

@@ -11,8 +11,11 @@ from cezzis_com_cloudsync_api.application.behaviors.dapr_app_token_authorization
     dapr_app_token_authorization,
 )
 from cezzis_com_cloudsync_api.application.behaviors.error_handling.problem_details import ProblemDetails
-from cezzis_com_cloudsync_api.application.concerns.integrations.events.cocktail_updated_event import (
-    CocktailUpdatedEvent,
+from cezzis_com_cloudsync_api.application.concerns.integrations.events.cocktail_updated_scheduled_event import (
+    CocktailUpdatedScheduledEvent,
+)
+from cezzis_com_cloudsync_api.application.concerns.integrations.events.cocktail_updated_scheduling_event import (
+    CocktailUpdatedSchedulingEvent,
 )
 from cezzis_com_cloudsync_api.domain.config.app_options import AppOptions
 from cezzis_com_cloudsync_api.domain.services.i_message_bus import IMessageBus
@@ -56,14 +59,6 @@ class IntegrationsRouter(APIRouter):
 
         self.add_api_route(
             path=f"/{cocktail_updates_scheduled_binding_name}",
-            endpoint=self._options_handler,
-            methods=["OPTIONS"],
-            description="Dapr input binding options endpoint",
-            include_in_schema=False,
-        )
-
-        self.add_api_route(
-            path=f"/{cocktail_updates_scheduled_binding_name}",
             endpoint=self.cocktail_updated_scheduled_sync,
             methods=["POST"],
             description="Syncs a scheduled cocktail updated message into the internal embedding system (Dapr input binding)",
@@ -98,7 +93,7 @@ class IntegrationsRouter(APIRouter):
         """
         try:
             body = await _rq.json()
-            event = CocktailUpdatedEvent(raw_payload=body)
+            event = CocktailUpdatedSchedulingEvent(raw_payload=body)
             await self.mediator.send_async(event)
 
         except Exception as ex:
@@ -129,7 +124,7 @@ class IntegrationsRouter(APIRouter):
         """
         try:
             body = await _rq.json()
-            event = CocktailUpdatedEvent(raw_payload=body)
+            event = CocktailUpdatedScheduledEvent(raw_payload=body)
             await self.mediator.send_async(event)
 
         except Exception as ex:

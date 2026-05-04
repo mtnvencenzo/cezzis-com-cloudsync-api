@@ -11,15 +11,29 @@ metadata:
 data:
   ENV: "loc"
   CLOUDSYNC_API_ALLOWED_ORIGINS: ""
+
+  # Cocktail update sync settings for internal kafka publishing
   CLOUDSYNC_API_COCKTAIL_UPDATE_SYNC_TOPIC: "cocktails-update-topic-loc"
   CLOUDSYNC_API_COCKTAIL_UPDATE_SYNC_LABEL: "cocktail-data-updated"
   CLOUDSYNC_API_COCKTAIL_UPDATE_SYNC_DAPR_BINDING: "pubsub-cocktail-updates-sync-topic"
+
+  # Cocktail update queue for reading messages published from the cocktails api
   CLOUDSYNC_API_COCKTAIL_UPDATE_SYNC_DAPR_INPUT_BINDING: "bindings-cocktail-updates-queue"
-  CLOUDSYNC_API_COCKTAIL_UPDATE_SYNC_SCHEDULED_DAPR_INPUT_BINDING: "bindings-cocktail-updates-scheduled-queue"
-  CLOUDSYNC_API_COCKTAIL_UPDATE_SYNC_SCHEDULED_DAPR_DEADLETTER_LABEL: "cocktail.data.updated-scheduled"
   CLOUDSYNC_API_COCKTAIL_UPDATE_SYNC_DAPR_DEADLETTER_PUBSUB: "pubsub-sync-deadletter-topic"
   CLOUDSYNC_API_COCKTAIL_UPDATE_SYNC_DAPR_DEADLETTER_LABEL: "cocktail.data.updated"
   CLOUDSYNC_API_COCKTAIL_UPDATE_SYNC_DAPR_DEADLETTER_TOPIC: "deadletter-topic"
+
+  # Cocktail update message scheduling settings for republishing and delayed messages
+  CLOUDSYNC_API_COCKTAIL_UPDATE_SCHEDULING_SYNC_TOPIC: "cocktail-updates-schedule-topic"
+  CLOUDSYNC_API_COCKTAIL_UPDATE_SCHEDULING_SYNC_LABEL: "cocktail.data.updated-scheduled"
+  CLOUDSYNC_API_COCKTAIL_UPDATE_SCHEDULING_SYNC_DAPR_BINDING: "pubsub-cloud-sync-topic"
+
+  # Cocktail update scheduled queue for reading delayed scheduled cocktail update messages published from self
+  CLOUDSYNC_API_COCKTAIL_UPDATE_SYNC_SCHEDULED_DAPR_INPUT_BINDING: "bindings-cocktail-updates-scheduled-queue"
+  CLOUDSYNC_API_COCKTAIL_UPDATE_SYNC_SCHEDULED_DAPR_DEADLETTER_PUBSUB: "pubsub-sync-deadletter-topic"
+  CLOUDSYNC_API_COCKTAIL_UPDATE_SYNC_SCHEDULED_DAPR_DEADLETTER_LABEL: "cocktail.data.updated-scheduled"
+  CLOUDSYNC_API_COCKTAIL_UPDATE_SYNC_SCHEDULED_DAPR_DEADLETTER_TOPIC: "deadletter-topic"
+
   OAUTH_DOMAIN: "login.cezzis.com"
   OAUTH_AUDIENCE: "https://cezzis-cloudsync-api"
   OAUTH_CLIENT_ID: "HZXyiZxjHgkQqeb6UJxmikCGYpSz5iPb"
