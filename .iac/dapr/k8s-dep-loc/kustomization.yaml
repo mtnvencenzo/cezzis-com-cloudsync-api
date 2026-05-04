@@ -6,4 +6,5 @@ resources:
   - bindings-cocktail-updates-queue.yaml
   - bindings-cocktail-updates-scheduled-queue.yaml
   - pubsub-cocktail-updates-sync-topic.yaml
+  - pubsub-cloud-sync-topic.yaml
   - pubsub-sync-deadletter-topic.yaml

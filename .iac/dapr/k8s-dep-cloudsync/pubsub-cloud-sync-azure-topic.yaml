@@ -1,0 +1,25 @@
+apiVersion: dapr.io/v1alpha1
+kind: Component
+metadata:
+  name: pubsub-cloud-sync-azure-topic
+  namespace: cezzis
+  labels:
+    app.kubernetes.io/part-of: cezzis
+    app.kubernetes.io/managed-by: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "200"
+spec:
+  type: pubsub.azure.servicebus.topics
+  version: v1
+  initTimeout: 120s
+  metadata:
+    - name: connectionString
+      secretKeyRef:
+        name: cezzis-com-cloudsync-api-cloudsync-secrets
+        key: AZURE_SB_CLOUD_SYNC_TOPIC_CONNECTION_STRING
+    - name: disableEntityManagement
+      value: "true"
+scopes:
+  - cezzis-com-cloudsync-api-cloudsync
+auth:
+  secretStore: kubernetes

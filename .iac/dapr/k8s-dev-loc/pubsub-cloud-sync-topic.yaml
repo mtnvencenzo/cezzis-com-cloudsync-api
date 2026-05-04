@@ -2,7 +2,7 @@ apiVersion: dapr.io/v1alpha1
 kind: Component
 
 metadata:
-  name: pubsub-cocktail-updates-schedule-topic
+  name: pubsub-cloud-sync-topic
 
 spec:
   type: pubsub.rabbitmq
