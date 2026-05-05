@@ -59,6 +59,14 @@ class IntegrationsRouter(APIRouter):
 
         self.add_api_route(
             path=f"/{cocktail_updates_scheduled_binding_name}",
+            endpoint=self._options_handler,
+            methods=["OPTIONS"],
+            description="Dapr input binding options endpoint",
+            include_in_schema=False,
+        )
+
+        self.add_api_route(
+            path=f"/{cocktail_updates_scheduled_binding_name}",
             endpoint=self.cocktail_updated_scheduled_sync,
             methods=["POST"],
             description="Syncs a scheduled cocktail updated message into the internal embedding system (Dapr input binding)",
