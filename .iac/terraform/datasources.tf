@@ -18,3 +18,8 @@ data "azurerm_servicebus_topic" "onprem_cloudsync_topic" {
   namespace_id = data.azurerm_servicebus_namespace.servicebus_namespace.id
 }
 
+data "azurerm_key_vault" "cocktails_onprem_keyvault" {
+  name                = "kv-${var.sub}-${var.region}-prm-${var.cocktails_shortdomain}-${var.short_sequence}"
+  resource_group_name = data.azurerm_resource_group.cocktails_resource_group.name
+}
+

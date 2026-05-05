@@ -11,7 +11,7 @@ variable "cocktails_domain" {
 }
 
 
-variable "shortdomain" {
+variable "cocktails_shortdomain" {
   type        = string
   description = "Short domain name. Use only lowercase letters and numbers"
   default     = "cockti"
