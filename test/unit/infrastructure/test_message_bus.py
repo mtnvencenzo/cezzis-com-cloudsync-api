@@ -153,3 +153,40 @@ class TestMessageBus:
 
         metadata = dapr_client.publish_event.call_args[1]["metadata"]
         assert metadata["ScheduledEnqueueTimeUtc"] == "2024-01-02T15:04:05Z"
+
+    @pytest.mark.anyio
+    async def test_publish_event_raises_for_blank_pubsub_name(self):
+        """Test that blank pubsub names fail before calling the Dapr SDK."""
+        dapr_client = MagicMock()
+        dapr_client.publish_event = AsyncMock()
+
+        bus = MessageBus(dapr_client)
+
+        with pytest.raises(ValueError, match="pubsub component name"):
+            await bus.publish_event_async(
+                event={"key": "val"},
+                message_label="label",
+                config_name="   ",
+                topic_name="my-topic",
+            )
+
+        dapr_client.publish_event.assert_not_called()
+
+    @pytest.mark.anyio
+    async def test_publish_event_strips_pubsub_and_topic_names(self):
+        """Test that publish uses trimmed pubsub and topic names."""
+        dapr_client = MagicMock()
+        dapr_client.publish_event = AsyncMock()
+
+        bus = MessageBus(dapr_client)
+
+        await bus.publish_event_async(
+            event={"key": "val"},
+            message_label="label",
+            config_name=" my-config ",
+            topic_name=" my-topic ",
+        )
+
+        call_kwargs = dapr_client.publish_event.call_args[1]
+        assert call_kwargs["pubsub_name"] == "my-config"
+        assert call_kwargs["topic_name"] == "my-topic"

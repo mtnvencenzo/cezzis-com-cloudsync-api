@@ -11,10 +11,23 @@ metadata:
 data:
   ENV: "prd"
   CLOUDSYNC_API_ALLOWED_ORIGINS: ""
+
+  # Cocktail update sync settings for internal kafka publishing
   CLOUDSYNC_API_COCKTAIL_UPDATE_SYNC_TOPIC: "cocktails-update-topic-cloudsync"
   CLOUDSYNC_API_COCKTAIL_UPDATE_SYNC_LABEL: "cocktail-data-updated"
   CLOUDSYNC_API_COCKTAIL_UPDATE_SYNC_DAPR_BINDING: "pubsub-cocktail-updates-sync-topic-cloudsync"
+
+  # Cocktail update queue for reading messages published from the cocktails api
   CLOUDSYNC_API_COCKTAIL_UPDATE_SYNC_DAPR_INPUT_BINDING: "bindings-cocktail-updates-azure-queue"
+
+  # Cocktail update message scheduling settings for republishing and delayed messages
+  CLOUDSYNC_API_COCKTAIL_UPDATE_SCHEDULING_SYNC_TOPIC: "sbt-vec-eus-prm-cocktails-cloud-sync-001"
+  CLOUDSYNC_API_COCKTAIL_UPDATE_SCHEDULING_SYNC_LABEL: "cocktail.data.updated-scheduled"
+  CLOUDSYNC_API_COCKTAIL_UPDATE_SCHEDULING_SYNC_DAPR_BINDING: "pubsub-cloud-sync-azure-topic"
+
+  # Cocktail update scheduled queue for reading delayed scheduled cocktail update messages published from self
+  CLOUDSYNC_API_COCKTAIL_UPDATE_SYNC_SCHEDULED_DAPR_INPUT_BINDING: "bindings-cocktail-updates-azure-scheduled-queue"
+
   OAUTH_DOMAIN: "login.cezzis.com"
   OAUTH_AUDIENCE: "https://cezzis-cloudsync-api"
   OAUTH_CLIENT_ID: "HZXyiZxjHgkQqeb6UJxmikCGYpSz5iPb"

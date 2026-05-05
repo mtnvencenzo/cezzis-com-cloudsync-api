@@ -45,12 +45,22 @@ class MessageBus(IMessageBus):
             raw_payload: Whether to publish as raw payload without CloudEvent wrapping. Defaults to False.
             scheduledEnqueueTimeUtc: Optional UTC datetime for delayed message delivery.
         """
-        useable_topic_name = topic_name or config_name
+        sanitized_config_name = config_name.strip()
+        sanitized_topic_name = topic_name.strip() if topic_name else ""
+
+        if not sanitized_config_name:
+            raise ValueError("Dapr pubsub component name is required")
+
+        useable_topic_name = sanitized_topic_name or sanitized_config_name
+
+        if not useable_topic_name:
+            raise ValueError("Dapr topic name is required")
+
         useable_correlation_id = correlation_id or str(uuid.uuid4())
 
         logger.info(
             "Publishing event to %s/%s [label=%s, correlationId=%s]",
-            config_name,
+            sanitized_config_name,
             useable_topic_name,
             message_label,
             useable_correlation_id,
@@ -70,7 +80,7 @@ class MessageBus(IMessageBus):
             metadata["rawPayload"] = "true"
 
         await self._dapr_client.publish_event(
-            pubsub_name=config_name,
+            pubsub_name=sanitized_config_name,
             topic_name=useable_topic_name,
             data=event,
             metadata=metadata,
