@@ -44,7 +44,7 @@ class CocktailUpdatedScheduledEventCommandHandler:
 
             return True
         except Exception as ex:
-            if self.app_options.cocktail_update_sync_dapr_deadletter_pubsub:
+            if self.app_options.cocktail_update_sync_scheduled_dapr_deadletter_pubsub:
                 self.logger.exception(
                     "Handler returned failure for cocktail_updated_scheduled event, dead-lettering message", exc_info=ex
                 )

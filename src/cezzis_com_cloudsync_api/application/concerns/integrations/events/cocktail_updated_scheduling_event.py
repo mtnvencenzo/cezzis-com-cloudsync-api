@@ -1,6 +1,7 @@
 """CocktailUpdatedEvent for syncing cocktail data with the embedding system."""
 
 import logging
+from datetime import UTC, datetime, timedelta
 from typing import Any
 
 from injector import inject
@@ -32,6 +33,11 @@ class CocktailUpdatedSchedulingEventCommandHandler:
     async def handle(self, event: CocktailUpdatedSchedulingEvent) -> bool:
         """Sync the cocktail updated event."""
 
+        # scheduling for tomorrow morning at 00:00 UTC to allow for any potential updates that come in throughout the day to be batched together, and to ensure the cocktail data is fully updated in the source system before we attempt to sync it with the embedding system
+        midnightTomorrow = (
+            datetime.now().replace(hour=0, minute=0, second=0, microsecond=0) + timedelta(days=1)
+        ).astimezone(UTC)
+
         try:
             await self.message_bus.publish_event_async(
                 event=event.raw_payload,
@@ -40,6 +46,7 @@ class CocktailUpdatedSchedulingEventCommandHandler:
                 topic_name=self.app_options.cocktail_update_scheduling_sync_topic,
                 content_type="application/json",
                 raw_payload=True,
+                scheduledEnqueueTimeUtc=midnightTomorrow,
             )
 
             return True

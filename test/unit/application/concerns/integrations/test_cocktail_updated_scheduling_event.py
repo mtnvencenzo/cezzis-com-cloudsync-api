@@ -1,6 +1,7 @@
 """Test cases for CocktailUpdatedSchedulingEvent and CocktailUpdatedSchedulingEventCommandHandler."""
 
-from unittest.mock import AsyncMock, MagicMock
+from datetime import UTC, datetime
+from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 
@@ -60,7 +61,7 @@ class TestCocktailUpdatedSchedulingEventCommandHandler:
 
     @pytest.mark.anyio
     async def test_handle_publishes_raw_payload(self):
-        """Test that handle publishes the raw payload via message bus."""
+        """Test that handle publishes the raw payload with next-day midnight UTC scheduling."""
         message_bus = MagicMock()
         message_bus.publish_event_async = AsyncMock()
         app_options = _create_app_options()
@@ -72,7 +73,13 @@ class TestCocktailUpdatedSchedulingEventCommandHandler:
 
         payload = {"cocktailId": "abc-123", "action": "updated"}
         event = CocktailUpdatedSchedulingEvent(raw_payload=payload)
-        result = await handler.handle(event)
+        fixed_now = datetime(2024, 1, 2, 15, 4, 5, tzinfo=UTC)
+
+        with patch(
+            "cezzis_com_cloudsync_api.application.concerns.integrations.events.cocktail_updated_scheduling_event.datetime"
+        ) as mocked_datetime:
+            mocked_datetime.now.return_value = fixed_now
+            result = await handler.handle(event)
 
         assert result is True
         message_bus.publish_event_async.assert_called_once_with(
@@ -82,6 +89,7 @@ class TestCocktailUpdatedSchedulingEventCommandHandler:
             topic_name="cocktail-updates-scheduling",
             content_type="application/json",
             raw_payload=True,
+            scheduledEnqueueTimeUtc=datetime(2024, 1, 3, 0, 0, 0, tzinfo=UTC),
         )
 
     @pytest.mark.anyio
