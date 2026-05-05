@@ -1,0 +1,28 @@
+apiVersion: dapr.io/v1alpha1
+kind: Component
+metadata:
+  name: bindings-cocktail-updates-azure-scheduled-queue
+  namespace: cezzis
+  labels:
+    app.kubernetes.io/part-of: cezzis
+    app.kubernetes.io/managed-by: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "200"
+spec:
+  type: bindings.azure.servicebus.queues
+  version: v1
+  metadata:
+    - name: connectionString
+      secretKeyRef:
+        name: cezzis-com-cloudsync-api-cloudsync-secrets
+        key: AZURE_SB_COCKTAIL_UPDATES_SCHEDULED_QUEUE_CONNECTION_STRING
+    - name: queueName
+      value: "sbq-vec-eus-prm-cloudsync-updates-sched-onprem-001"
+    - name: direction
+      value: "input"
+    - name: disableEntityManagement
+      value: "true"
+scopes:
+  - cezzis-com-cloudsync-api-cloudsync
+auth:
+  secretStore: kubernetes

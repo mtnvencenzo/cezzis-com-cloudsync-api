@@ -13,11 +13,15 @@ class AppOptions(BaseSettings):
     )
 
     allowed_origins: str = Field(default="", validation_alias="CLOUDSYNC_API_ALLOWED_ORIGINS")
+
+    # Cocktail update sync topic for internal kafka publishing
     cocktail_update_sync_topic: str = Field(default="", validation_alias="CLOUDSYNC_API_COCKTAIL_UPDATE_SYNC_TOPIC")
     cocktail_update_sync_label: str = Field(default="", validation_alias="CLOUDSYNC_API_COCKTAIL_UPDATE_SYNC_LABEL")
     cocktail_update_sync_dapr_binding: str = Field(
         default="", validation_alias="CLOUDSYNC_API_COCKTAIL_UPDATE_SYNC_DAPR_BINDING"
     )
+
+    # Incoming cocktail updates from the cocktail publishing api
     cocktail_update_sync_dapr_input_binding: str = Field(
         default="", validation_alias="CLOUDSYNC_API_COCKTAIL_UPDATE_SYNC_DAPR_INPUT_BINDING"
     )
@@ -29,6 +33,31 @@ class AppOptions(BaseSettings):
     )
     cocktail_update_sync_dapr_deadletter_topic: str = Field(
         default="", validation_alias="CLOUDSYNC_API_COCKTAIL_UPDATE_SYNC_DAPR_DEADLETTER_TOPIC"
+    )
+
+    # Cocktail update sync topic for delayed scheduling message
+    cocktail_update_scheduling_sync_topic: str = Field(
+        default="", validation_alias="CLOUDSYNC_API_COCKTAIL_UPDATE_SCHEDULING_SYNC_TOPIC"
+    )
+    cocktail_update_scheduling_sync_label: str = Field(
+        default="", validation_alias="CLOUDSYNC_API_COCKTAIL_UPDATE_SCHEDULING_SYNC_LABEL"
+    )
+    cocktail_update_scheduling_sync_dapr_binding: str = Field(
+        default="", validation_alias="CLOUDSYNC_API_COCKTAIL_UPDATE_SCHEDULING_SYNC_DAPR_BINDING"
+    )
+
+    # Incoming cocktail updates from the scheduling system
+    cocktail_update_sync_scheduled_dapr_input_binding: str = Field(
+        default="", validation_alias="CLOUDSYNC_API_COCKTAIL_UPDATE_SYNC_SCHEDULED_DAPR_INPUT_BINDING"
+    )
+    cocktail_update_sync_scheduled_dapr_deadletter_pubsub: str = Field(
+        default="", validation_alias="CLOUDSYNC_API_COCKTAIL_UPDATE_SYNC_SCHEDULED_DAPR_DEADLETTER_PUBSUB"
+    )
+    cocktail_update_sync_scheduled_dapr_deadletter_label: str = Field(
+        default="", validation_alias="CLOUDSYNC_API_COCKTAIL_UPDATE_SYNC_SCHEDULED_DAPR_DEADLETTER_LABEL"
+    )
+    cocktail_update_sync_scheduled_dapr_deadletter_topic: str = Field(
+        default="", validation_alias="CLOUDSYNC_API_COCKTAIL_UPDATE_SYNC_SCHEDULED_DAPR_DEADLETTER_TOPIC"
     )
 
 
@@ -49,6 +78,8 @@ def get_app_options() -> AppOptions:
 
         if not _app_options.allowed_origins:
             _logger.warning("CLOUDSYNC_API_ALLOWED_ORIGINS environment variable is not configured")
+
+        # Cocktail update sync topic for internal kafka publishing
         if not _app_options.cocktail_update_sync_topic:
             _logger.warning("CLOUDSYNC_API_COCKTAIL_UPDATE_SYNC_TOPIC environment variable is not configured")
         if not _app_options.cocktail_update_sync_label:
@@ -67,6 +98,31 @@ def get_app_options() -> AppOptions:
             if not _app_options.cocktail_update_sync_dapr_deadletter_topic:
                 _logger.warning(
                     "CLOUDSYNC_API_COCKTAIL_UPDATE_SYNC_DAPR_DEADLETTER_TOPIC environment variable is not configured"
+                )
+        if not _app_options.cocktail_update_scheduling_sync_topic:
+            _logger.warning(
+                "CLOUDSYNC_API_COCKTAIL_UPDATE_SCHEDULING_SYNC_TOPIC environment variable is not configured"
+            )
+        if not _app_options.cocktail_update_scheduling_sync_label:
+            _logger.warning(
+                "CLOUDSYNC_API_COCKTAIL_UPDATE_SCHEDULING_SYNC_LABEL environment variable is not configured"
+            )
+        if not _app_options.cocktail_update_scheduling_sync_dapr_binding:
+            _logger.warning(
+                "CLOUDSYNC_API_COCKTAIL_UPDATE_SCHEDULING_SYNC_DAPR_BINDING environment variable is not configured"
+            )
+        if not _app_options.cocktail_update_sync_scheduled_dapr_input_binding:
+            _logger.warning(
+                "CLOUDSYNC_API_COCKTAIL_UPDATE_SYNC_SCHEDULED_DAPR_INPUT_BINDING environment variable is not configured"
+            )
+        if not _app_options.cocktail_update_sync_scheduled_dapr_deadletter_pubsub:
+            if not _app_options.cocktail_update_sync_scheduled_dapr_deadletter_label:
+                _logger.warning(
+                    "CLOUDSYNC_API_COCKTAIL_UPDATE_SYNC_SCHEDULED_DAPR_DEADLETTER_LABEL environment variable is not configured"
+                )
+            if not _app_options.cocktail_update_sync_scheduled_dapr_deadletter_topic:
+                _logger.warning(
+                    "CLOUDSYNC_API_COCKTAIL_UPDATE_SYNC_SCHEDULED_DAPR_DEADLETTER_TOPIC environment variable is not configured"
                 )
 
         _logger.info("Application options loaded successfully.")

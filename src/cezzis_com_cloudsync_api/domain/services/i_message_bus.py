@@ -1,6 +1,7 @@
 """Message bus interface for pub/sub operations."""
 
 from abc import ABC, abstractmethod
+from datetime import datetime
 from typing import Any
 
 
@@ -17,6 +18,7 @@ class IMessageBus(ABC):
         content_type: str | None = "application/json",
         correlation_id: str | None = None,
         raw_payload: bool = False,
+        scheduledEnqueueTimeUtc: datetime | None = None,
     ) -> None:
         """Publish an event to a topic.
 
@@ -28,5 +30,6 @@ class IMessageBus(ABC):
             content_type: The content type of the message. Defaults to "application/json".
             correlation_id: The correlation ID for tracing. Defaults to a new UUID if not provided.
             raw_payload: Whether to publish as raw payload without CloudEvent wrapping. Defaults to False.
+            scheduledEnqueueTimeUtc: Optional UTC datetime for delayed message delivery.
         """
         ...

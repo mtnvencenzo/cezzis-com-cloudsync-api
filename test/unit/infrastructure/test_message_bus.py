@@ -1,5 +1,6 @@
 """Test cases for MessageBus."""
 
+from datetime import UTC, datetime, timedelta
 from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
@@ -124,3 +125,31 @@ class TestMessageBus:
 
         metadata = dapr_client.publish_event.call_args[1]["metadata"]
         assert metadata["CorrelationId"] == "my-corr-id"
+
+    @pytest.mark.anyio
+    async def test_publish_event_formats_scheduled_enqueue_time_as_rfc3339_utc(self):
+        """Test that scheduled enqueue metadata uses RFC3339 UTC formatting."""
+        dapr_client = MagicMock()
+        dapr_client.publish_event = AsyncMock()
+
+        bus = MessageBus(dapr_client)
+
+        await bus.publish_event_async(
+            event={"key": "val"},
+            message_label="label",
+            config_name="config",
+            scheduledEnqueueTimeUtc=datetime(
+                2024,
+                1,
+                2,
+                16,
+                4,
+                5,
+                987654,
+                tzinfo=UTC,
+            )
+            - timedelta(hours=1),
+        )
+
+        metadata = dapr_client.publish_event.call_args[1]["metadata"]
+        assert metadata["ScheduledEnqueueTimeUtc"] == "2024-01-02T15:04:05Z"

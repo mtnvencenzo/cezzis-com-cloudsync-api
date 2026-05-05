@@ -2,6 +2,7 @@
 
 import logging
 import uuid
+from datetime import UTC, datetime
 from typing import Any
 
 from cezzis_com_cloudsync_api.domain.services.i_message_bus import IMessageBus
@@ -30,6 +31,7 @@ class MessageBus(IMessageBus):
         content_type: str | None = "application/json",
         correlation_id: str | None = None,
         raw_payload: bool = False,
+        scheduledEnqueueTimeUtc: datetime | None = None,
     ) -> None:
         """Publish an event to a topic.
 
@@ -41,6 +43,7 @@ class MessageBus(IMessageBus):
             content_type: The content type of the message. Defaults to "application/json".
             correlation_id: The correlation ID for tracing. Defaults to a new UUID if not provided.
             raw_payload: Whether to publish as raw payload without CloudEvent wrapping. Defaults to False.
+            scheduledEnqueueTimeUtc: Optional UTC datetime for delayed message delivery.
         """
         useable_topic_name = topic_name or config_name
         useable_correlation_id = correlation_id or str(uuid.uuid4())
@@ -60,6 +63,9 @@ class MessageBus(IMessageBus):
             "routingKey": message_label,
         }
 
+        if scheduledEnqueueTimeUtc is not None:
+            metadata["ScheduledEnqueueTimeUtc"] = self._format_rfc3339_utc(scheduledEnqueueTimeUtc)
+
         if raw_payload:
             metadata["rawPayload"] = "true"
 
@@ -71,3 +77,9 @@ class MessageBus(IMessageBus):
         )
 
         logger.info("Message published [label=%s]", message_label)
+
+    @staticmethod
+    def _format_rfc3339_utc(value: datetime) -> str:
+        """Format datetimes as RFC3339 in UTC with a trailing Z."""
+        normalized_value = value.replace(tzinfo=UTC) if value.tzinfo is None else value.astimezone(UTC)
+        return normalized_value.isoformat(timespec="seconds").replace("+00:00", "Z")

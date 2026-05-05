@@ -1,17 +1,19 @@
 
 # Cezzis.com CloudSync API
 
-A message-forwarding microservice that receives cocktail update events from RabbitMQ via a Dapr input binding and publishes them to Kafka via Dapr pub/sub.
+A message-forwarding microservice that receives cocktail update events from Azure ServiceBus via a Dapr input binding and publishes them to Kafka via Dapr pub/sub.
 
 ## Overview
 
-**Status:** Work In Progress (WIP) — This project is in its early stages and actively under development.
+The CloudSync API acts as a bridge in the Cezzis.com event-driven architecture, synchronizing cocktail data changes across services. It listens for incoming messages on Azure Servicebus queues through a Dapr input binding and forwards them to a Kafka topic through Dapr pub/sub.
 
-The CloudSync API acts as a bridge in the Cezzis.com event-driven architecture, synchronizing cocktail data changes across services. It listens for incoming messages on a RabbitMQ queue through a Dapr input binding and forwards them to a Kafka topic through Dapr pub/sub.
+## Production Environment
+
+![Complete Diagram](./.assets/cezzis-com-cloudsync.drawio.svg)
 
 ### Key Features
 - FastAPI-based API with OpenAPI 3.0 specification
-- Dapr input binding (RabbitMQ) to pub/sub (Kafka) message forwarding
+- Dapr input binding (ServiceBus) to pub/sub (Kafka) message forwarding. (Uses RabbitMq input bindings for local testing)
 - Dapr API token and App API token authorization
 - OpenTelemetry instrumentation for observability
 - Modular clean architecture (Application / Domain / Infrastructure layers)
@@ -143,7 +145,7 @@ kubectl apply -f https://raw.githubusercontent.com/mtnvencenzo/cezzis-com-clouds
 kubectl apply -f https://raw.githubusercontent.com/mtnvencenzo/cezzis-com-cloudsync-api/refs/heads/main/.iac/argocd/image-updater-cloudsync.yaml
 ```
 
-### Remove 
+*Remove* 
 ``` shell
 kubectl delete -f https://raw.githubusercontent.com/mtnvencenzo/cezzis-com-cloudsync-api/refs/heads/main/.iac/argocd/cezzis-com-cloudsync-api-cloudsync.yaml
 
@@ -159,11 +161,11 @@ kubectl apply -f https://raw.githubusercontent.com/mtnvencenzo/cezzis-com-clouds
 kubectl apply -f https://raw.githubusercontent.com/mtnvencenzo/cezzis-com-cloudsync-api/refs/heads/main/.iac/argocd/image-updater-loc.yaml
 ```
 
-### Remove 
+*Remove* 
 ``` shell
 kubectl delete -f https://raw.githubusercontent.com/mtnvencenzo/cezzis-com-cloudsync-api/refs/heads/main/.iac/argocd/cezzis-com-cloudsync-api-loc.yaml
 
 kubectl delete -f https://raw.githubusercontent.com/mtnvencenzo/cezzis-com-cloudsync-api/refs/heads/main/.iac/argocd/image-updater-loc.yaml
 ```
 
-This project is licensed under the MIT License.
+This project is proprietary software. See the LICENSE file for licensing terms.

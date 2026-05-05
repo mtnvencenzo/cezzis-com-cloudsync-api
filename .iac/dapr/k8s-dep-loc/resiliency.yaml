@@ -27,3 +27,7 @@ spec:
         inbound:
           retry: bindingRetry
           circuitBreaker: bindingCircuitBreaker
+      bindings-cocktail-updates-scheduled-queue:
+        inbound:
+          retry: bindingRetry
+          circuitBreaker: bindingCircuitBreaker
