@@ -8,5 +8,5 @@ resources:
   - deployment.yml
 images:
   - name: acrveceusgloshared001.azurecr.io/cezziscomcloudsyncapi
-    newTag: 0.0.16
+    newTag: 0.0.17
     newName: acrveceusgloshared001.azurecr.io/cezziscomcloudsyncapi
