@@ -35,6 +35,10 @@ class AppOptions(BaseSettings):
         default="", validation_alias="CLOUDSYNC_API_COCKTAIL_UPDATE_SYNC_DAPR_DEADLETTER_TOPIC"
     )
 
+    cocktail_update_scheduling_disable_future_scheduling: bool = Field(
+        default=False, validation_alias="CLOUDSYNC_API_COCKTAIL_UPDATE_SCHEDULING_DISABLE_FUTURE_SCHEDULING"
+    )
+
     # Cocktail update sync topic for delayed scheduling message
     cocktail_update_scheduling_sync_topic: str = Field(
         default="", validation_alias="CLOUDSYNC_API_COCKTAIL_UPDATE_SCHEDULING_SYNC_TOPIC"

@@ -29,6 +29,7 @@ data:
   CLOUDSYNC_API_COCKTAIL_UPDATE_SCHEDULING_SYNC_DAPR_BINDING: "pubsub-cloud-sync-topic"
 
   # Cocktail update scheduled queue for reading delayed scheduled cocktail update messages published from self
+  CLOUDSYNC_API_COCKTAIL_UPDATE_SCHEDULING_DISABLE_FUTURE_SCHEDULING: "True"
   CLOUDSYNC_API_COCKTAIL_UPDATE_SYNC_SCHEDULED_DAPR_INPUT_BINDING: "bindings-cocktail-updates-scheduled-queue"
   CLOUDSYNC_API_COCKTAIL_UPDATE_SYNC_SCHEDULED_DAPR_DEADLETTER_PUBSUB: "pubsub-sync-deadletter-topic"
   CLOUDSYNC_API_COCKTAIL_UPDATE_SYNC_SCHEDULED_DAPR_DEADLETTER_LABEL: "cocktail.data.updated-scheduled"
