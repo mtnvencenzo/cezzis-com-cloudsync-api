@@ -38,3 +38,12 @@ data:
   OTEL_SERVICE_NAME: "cezzis-com-cloudsync-api-cloudsync"
   OTEL_SERVICE_NAMESPACE: "cezzis"
   KAFKA_BOOTSTRAP_SERVERS: "kafka-broker-1.kafka-platform.svc.cluster.local:19092,kafka-broker-2.kafka-platform.svc.cluster.local:19093,kafka-broker-3.kafka-platform.svc.cluster.local:19095"
+
+  # Scheduler settings
+  SCHEDULER_INIT_JOB_ENABLED: "true"
+  SCHEDULER_INIT_DELAY_SECONDS: "30"
+  AVAILABILITY_TESTS_CRON: "0 */15 * * * *"
+  COCKTAILS_API_AVAILABILITY_TEST_URL: "https://www.cezzis.com/prd/cocktails/api/v1/health/ping"
+  ACCOUNTS_API_AVAILABILITY_TEST_URL: "https://www.cezzis.com/prd/accounts/api/v1/health/ping"
+  CEZZIS_COM_AVAILABILITY_TEST_URL: "https://www.cezzis.com/cocktails/absinthe-frappe"
+  

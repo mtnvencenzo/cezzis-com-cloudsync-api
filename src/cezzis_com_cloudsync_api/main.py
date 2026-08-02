@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.concurrency import asynccontextmanager
 from fastapi.exceptions import HTTPException, RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
@@ -27,6 +28,7 @@ from cezzis_com_cloudsync_api.application.behaviors.otel.probe_telemetry_filter 
 )
 from cezzis_com_cloudsync_api.domain.config.app_options import AppOptions
 from cezzis_com_cloudsync_api.domain.config.oauth_options import OAuthOptions
+from cezzis_com_cloudsync_api.workers.scheduler.init_background_scheduler import start_background_scheduler
 
 initialize_opentelemetry()
 injector = create_injector()
@@ -34,7 +36,15 @@ app_options = injector.get(AppOptions)
 oauth_options = injector.get(OAuthOptions)
 
 
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """Application lifespan event handler."""
+    start_background_scheduler(injector)
+    yield
+
+
 app = FastAPI(
+    lifespan=lifespan,
     responses={
         "default": {
             "model": ProblemDetails,  # This ensures the model is added to components/schemas

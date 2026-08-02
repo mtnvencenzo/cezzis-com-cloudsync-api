@@ -1,6 +1,7 @@
 from cezzis_com_cloudsync_api.domain.config.app_options import AppOptions, get_app_options
 from cezzis_com_cloudsync_api.domain.config.dapr_options import DaprOptions, get_dapr_options
 from cezzis_com_cloudsync_api.domain.config.otel_options import OTelOptions, get_otel_options
+from cezzis_com_cloudsync_api.domain.config.scheduler_options import SchedulerOptions, get_scheduler_options
 
 __all__ = [
     "OTelOptions",
@@ -9,4 +10,6 @@ __all__ = [
     "get_app_options",
     "DaprOptions",
     "get_dapr_options",
+    "SchedulerOptions",
+    "get_scheduler_options",
 ]
