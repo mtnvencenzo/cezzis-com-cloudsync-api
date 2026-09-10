@@ -50,12 +50,41 @@ src/cezzis_com_cloudsync_api/
 - Poetry 2.x for dependency management
 - Dapr CLI (for local development with sidecar)
 
-### Installation
+### Install Poetry
 
-Install dependencies using Poetry:
+Install Poetry once for your Ubuntu user. You can run these commands from any directory:
 
 ```bash
-poetry install
+sudo apt update
+sudo apt install -y pipx
+pipx ensurepath
+```
+
+Open a new terminal, then install Poetry and verify it:
+
+```bash
+pipx install poetry
+poetry --version
+```
+
+`pipx` keeps Poetry and its own dependencies separate from the system Python and from project dependencies.
+
+### Installation
+
+Run the following commands from this repository's root directory, where `pyproject.toml` is located:
+
+```bash
+cd ~/Github/cezzis-com-accounts-api
+poetry config virtualenvs.in-project true
+poetry env use python3
+```
+
+This creates a separate `.venv` directory in the repository. Repeat these project setup commands for each Poetry repository; do not repeat the Poetry installation.
+
+Install dependencies using the standard repository workflow:
+
+```bash
+make install
 ```
 
 ### Configuration
