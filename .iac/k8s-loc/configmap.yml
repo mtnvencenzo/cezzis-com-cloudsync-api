@@ -35,20 +35,35 @@ data:
   CLOUDSYNC_API_COCKTAIL_UPDATE_SYNC_SCHEDULED_DAPR_DEADLETTER_LABEL: "cocktail.data.updated-scheduled"
   CLOUDSYNC_API_COCKTAIL_UPDATE_SYNC_SCHEDULED_DAPR_DEADLETTER_TOPIC: "deadletter-topic"
 
+  # --------------------------------------------------------------------------|
+  # OAuth2 settings                                                           |
+  # --------------------------------------------------------------------------|
   OAUTH_DOMAIN: "login.cezzis.com"
   OAUTH_AUDIENCE: "https://cezzis-cloudsync-api"
   OAUTH_CLIENT_ID: "HZXyiZxjHgkQqeb6UJxmikCGYpSz5iPb"
   OAUTH_ISSUER: "https://login.cezzis.com/"
   OAUTH_PKCE: ""
+  # --------------------------------------------------------------------------|
+  # open telemetry / tracing settings                                         |
+  # --------------------------------------------------------------------------|
   OTEL_EXPORTER_OTLP_ENDPOINT: "http://otel-collector.elastic-platform.svc.cluster.local:4318"
   OTEL_SERVICE_NAME: "cezzis-com-cloudsync-api"
   OTEL_SERVICE_NAMESPACE: "cezzis"
+
+  # --------------------------------------------------------------------------|
+  # kafka settings                                                            |
+  # --------------------------------------------------------------------------|
   KAFKA_BOOTSTRAP_SERVERS: "kafka-broker-1.kafka-platform.svc.cluster.local:19092,kafka-broker-2.kafka-platform.svc.cluster.local:19093,kafka-broker-3.kafka-platform.svc.cluster.local:19095"
 
-  # Scheduler settings
-  # Scheduler settings
+  # --------------------------------------------------------------------------|
+  # scheduler settings                                                        |
+  # --------------------------------------------------------------------------|
   SCHEDULER_INIT_JOB_ENABLED: "true"
   SCHEDULER_INIT_DELAY_SECONDS: "30"
+
+  # --------------------------------------------------------------------------|
+  # availability test settings                                                |
+  # --------------------------------------------------------------------------|
   AVAILABILITY_TESTS_CRON: "0 */15 * * * *"
   COCKTAILS_API_AVAILABILITY_TEST_URL: "http://cezzis-com-cocktails-api:7177/api/v1/health/ping"
   COCKTAILS_API_AVAILABILITY_TEST_AUTH_HEADER: ""

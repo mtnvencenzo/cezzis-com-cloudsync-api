@@ -5,9 +5,11 @@ from cezzis_com_cloudsync_api.application.concerns.availability.commands.availab
     AvailabilityTestCommandHandler,
 )
 from cezzis_com_cloudsync_api.application.concerns.health.queries.health_check_query import HealthCheckQueryHandler
+from cezzis_com_cloudsync_api.application.concerns.health.queries.ping_query import PingQueryHandler
 from cezzis_com_cloudsync_api.application.concerns.health.queries.readiness_check_query import (
     ReadinessCheckQueryHandler,
 )
+from cezzis_com_cloudsync_api.application.concerns.health.queries.version_query import VersionQueryHandler
 from cezzis_com_cloudsync_api.application.concerns.integrations.events import (
     CocktailUpdatedScheduledEventCommandHandler,
     CocktailUpdatedSchedulingEventCommandHandler,
@@ -47,6 +49,8 @@ class AppModule(Module):
         binder.bind(HealthCheckQueryHandler, HealthCheckQueryHandler, scope=singleton)
         binder.bind(ReadinessCheckQueryHandler, ReadinessCheckQueryHandler, scope=singleton)
         binder.bind(AvailabilityTestCommandHandler, AvailabilityTestCommandHandler, scope=singleton)
+        binder.bind(PingQueryHandler, PingQueryHandler, scope=singleton)
+        binder.bind(VersionQueryHandler, VersionQueryHandler, scope=singleton)
 
         # Integration event handlers
         binder.bind(
