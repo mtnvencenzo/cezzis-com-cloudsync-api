@@ -70,3 +70,6 @@ data:
   ACCOUNTS_API_AVAILABILITY_TEST_URL: "http://cezzis-com-accounts-api:8016/api/v1/health/ping"
   ACCOUNTS_API_AVAILABILITY_TEST_AUTH_HEADER: ""
   CEZZIS_COM_AVAILABILITY_TEST_URL: "http://cezzis-com-cocktails-nextjs:4001/cocktails/absinthe-frappe"
+  CEZZIS_COM_AVAILABILITY_TEST_RESPONSE_STRING: ""
+  AISEARCH_AVAILABILITY_TEST_URL: "http://cezzis-com-cocktails-aisearch:8010/api/v1/health/ping"
+  AISEARCH_AVAILABILITY_TEST_AUTH_HEADER: ""

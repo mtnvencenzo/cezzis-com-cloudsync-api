@@ -46,4 +46,6 @@ data:
   COCKTAILS_API_AVAILABILITY_TEST_URL: "https://www.cezzis.com/prd/cocktails/api/v1/health/ping"
   ACCOUNTS_API_AVAILABILITY_TEST_URL: "https://www.cezzis.com/prd/accounts/api/v1/health/ping"
   CEZZIS_COM_AVAILABILITY_TEST_URL: "https://www.cezzis.com/cocktails/absinthe-frappe"
-  
+  CEZZIS_COM_AVAILABILITY_TEST_RESPONSE_STRING: ""
+  AISEARCH_AVAILABILITY_TEST_URL: "http://cezzis-com-cocktails-aisearch-cloudsync:8010/api/v1/health/ping"
+  AISEARCH_AVAILABILITY_TEST_AUTH_HEADER: ""

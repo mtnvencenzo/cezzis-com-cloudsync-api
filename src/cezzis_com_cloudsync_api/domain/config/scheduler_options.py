@@ -48,6 +48,10 @@ class SchedulerOptions(BaseSettings):
     cezzis_com_availability_test_response_string: str | None = Field(
         default="", validation_alias="CEZZIS_COM_AVAILABILITY_TEST_RESPONSE_STRING"
     )
+    aisearch_availability_test_url: str | None = Field(default="", validation_alias="AISEARCH_AVAILABILITY_TEST_URL")
+    aisearch_availability_test_auth_header: str | None = Field(
+        default="", validation_alias="AISEARCH_AVAILABILITY_TEST_AUTH_HEADER"
+    )
 
     availability_tests_cron: str = Field(default="0 * * * *", validation_alias="AVAILABILITY_TESTS_CRON")
 
@@ -77,6 +81,12 @@ class SchedulerOptions(BaseSettings):
                     expected_status_code=200,
                     authorization_header=None,
                     response_string=self.cezzis_com_availability_test_response_string,
+                ),
+                AvailabilityTest(
+                    name="AISearch API",
+                    url=self.aisearch_availability_test_url,
+                    expected_status_code=200,
+                    authorization_header=self.aisearch_availability_test_auth_header,
                 ),
             ]
             self.availability_tests = tests
