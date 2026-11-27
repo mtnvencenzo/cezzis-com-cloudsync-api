@@ -33,6 +33,9 @@ class CocktailUpdatedSchedulingEventCommandHandler:
     async def handle(self, event: CocktailUpdatedSchedulingEvent) -> bool:
         """Sync the cocktail updated event."""
 
+        if self.app_options.cocktail_update_processing_disabled:
+            return True
+
         # scheduling for tomorrow morning at 00:00 UTC to allow for any potential updates that come in throughout the day to be batched together, and to ensure the cocktail data is fully updated in the source system before we attempt to sync it with the embedding system
         midnightTomorrow = (
             datetime.now().replace(hour=0, minute=0, second=0, microsecond=0) + timedelta(days=1)

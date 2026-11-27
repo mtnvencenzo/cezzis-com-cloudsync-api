@@ -59,6 +59,7 @@ def _create_app_options() -> MagicMock:
     app_options.cocktail_update_sync_scheduled_dapr_deadletter_pubsub = SCHEDULED_DEADLETTER_PUBSUB
     app_options.cocktail_update_sync_scheduled_dapr_deadletter_label = SCHEDULED_DEADLETTER_LABEL
     app_options.cocktail_update_sync_scheduled_dapr_deadletter_topic = SCHEDULED_DEADLETTER_TOPIC
+    app_options.cocktail_update_processing_disabled = False
     return app_options
 
 

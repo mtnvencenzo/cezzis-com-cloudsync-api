@@ -32,6 +32,9 @@ class CocktailUpdatedScheduledEventCommandHandler:
     async def handle(self, event: CocktailUpdatedScheduledEvent) -> bool:
         """Sync the cocktail updated scheduled event."""
 
+        if self.app_options.cocktail_update_processing_disabled:
+            return True
+
         try:
             await self.message_bus.publish_event_async(
                 event=event.raw_payload,

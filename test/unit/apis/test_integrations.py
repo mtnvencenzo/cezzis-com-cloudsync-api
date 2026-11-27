@@ -41,6 +41,7 @@ def _create_app_options(disable_scheduling: bool = False) -> MagicMock:
     app_options.cocktail_update_scheduling_sync_dapr_binding = "pubsub-cocktail-updates-scheduling-topic"
     app_options.cocktail_update_scheduling_sync_topic = "cocktail-updates-scheduling"
     app_options.cocktail_update_scheduling_disable_future_scheduling = disable_scheduling
+    app_options.cocktail_update_processing_disabled = False
     return app_options
 
 
